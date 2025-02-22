@@ -16,7 +16,7 @@ jobs:
        - name: Nhập thông tin Token
          run: |
           echo "Updating main.py with the provided Discord token..."
-          sudo sed -i "s/TOKEN = ''/TOKEN = '{{github.event.inputs.tokenbot}}'/" main.py
+          cd ~ && sudo sed -i "s/TOKEN = ''/TOKEN = '{{github.event.inputs.tokenbot}}'/" main.py
           echo "Starting the Discord bot..."
           echo "To start the bot in the future, run: python3 main.py"
           sudo python3 main.py
