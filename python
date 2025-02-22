@@ -130,7 +130,7 @@ async def start_server(interaction: discord.Interaction, container_name: str):
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
             await interaction.user.send(embed=discord.Embed(description=f"<:AC_meow:1174719189429276682>Instance Bắt đầu\nLệnh phiên SSH: ```{ssh_session_line}```", color=0x00ff00))
-            await interaction.response.send_message(embed=discord.Embed(description="\<:AC_meow:1174719189429276682>Instance đã bắt đầu thành công. Kiểm tra tin nhắn trực tiếp của bạn để biết chi tiết.", color=0x00ff00))
+            await interaction.response.send_message(embed=discord.Embed(description="<:AC_meow:1174719189429276682>Instance đã bắt đầu thành công. Kiểm tra tin nhắn trực tiếp của bạn để biết chi tiết.", color=0x00ff00))
         else:
             await interaction.response.send_message(embed=discord.Embed(description="<:hetcuunoi:1125772819381366824>Instance đã bắt đầu nhưng không nhận được dòng phiên SSH.", color=0xff0000))
     except subprocess.CalledProcessError as e:
