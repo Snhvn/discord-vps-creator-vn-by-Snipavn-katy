@@ -12,7 +12,7 @@ echo "------------------------"
 
 echo Make your own Free VPS Hosting, Dont Allow Mining
 
-cd
+cd ~
 
 echo "Installing python3-pip and docker."
 sudo apt update
