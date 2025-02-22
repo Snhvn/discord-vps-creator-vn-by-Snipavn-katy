@@ -1,0 +1,23 @@
+name: Vps Bot Discord
+on:
+  workflow_dispatch:
+    inputs:
+      tokenbot:
+         description: 'Nhập Token bot của bạn vào đây'
+         required: true
+jobs:
+   build:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Cài Python
+         run: |
+          apt update -y
+          apt install wget -y && wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/install.sh && chmod +x install.sh && ./install.sh
+       - name: Nhập thông tin Token
+         run: |
+          echo "Updating main.py with the provided Discord token..."
+          sed -i "s/TOKEN = ''/TOKEN = '{{github.event.inputs.tokenbot}}'/" main.py
+          echo "Starting the Discord bot..."
+          echo "To start the bot in the future, run: python3 main.py"
+          python3 main.py
+          
