@@ -10,8 +10,8 @@ echo "SNIPA VN"
 echo "YouTube : https://youtube.com/@snipavn205"
 echo "------------------------"
 
-echo Make your own Free VPS Hosting, Dont Allow Mining/Tạo VPS Hosting miễn phí của riêng bạn, Không cho phép khai thác
-mkdir discord-bot-vps-creator
+echo "Make your own Free VPS Hosting, Dont Allow Mining/Tạo VPS Hosting miễn phí của riêng bạn, Không cho phép khai thác"
+sudo mkdir discord-bot-vps-creator
 cd discord-bot-vps-creator
 
 echo "Installing python3-pip and docker/Cài đặt python3-pip và docker."
