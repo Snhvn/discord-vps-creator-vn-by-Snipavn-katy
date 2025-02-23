@@ -23,20 +23,18 @@ sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
 
 echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
-cat <<EOF > Dockerfile1
-FROM ubuntu:22.04
+wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile1
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
-cat <<EOF > Dockerfile2
-FROM debian:12
-
-RUN apt update
+https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
+RUN apt update -y
 RUN apt install -y tmate
 EOF
 
+
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
-sudo docker build -t ubuntu-22.04-with-tmate .
-sudo docker build -t debian-with-tmate .
+sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 .
+sudo docker build -t debian-with-tmate -f Dockerfile2 .
 echo Built successfully/Xây dựng thành công
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
 echo -e "Enter 1 (Ubuntu-22.04) or Enter 2 (Debian-12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Debian-12)"
