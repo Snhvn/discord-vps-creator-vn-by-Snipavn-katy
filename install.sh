@@ -26,6 +26,7 @@ echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
 wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile1
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
 wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
+
 RUN apt update -y
 RUN apt install -y tmate
 EOF
