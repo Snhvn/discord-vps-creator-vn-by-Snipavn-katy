@@ -240,7 +240,7 @@ async def create_server_task_debian(interaction):
           await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
           return
 
-    image = "debian-with-tmate"
+      image = "debian-with-tmate"
     
     try:
         container_id = subprocess.check_output([
