@@ -246,7 +246,7 @@ async def create_server_task_debian(interaction):
         container_id = subprocess.check_output([
             "docker", "run", "--cpus 1", "--memory 6G", "-itd", image
         ]).strip().decode('utf-8')
-    except subprocess.CalledProcessError as e:
+      except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
         return
 
