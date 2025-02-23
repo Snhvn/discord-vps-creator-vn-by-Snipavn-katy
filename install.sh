@@ -37,9 +37,9 @@ sudo docker build -t ubuntu-22.04-with-tmate .
 sudo docker build -t debian-with-tmate .
 echo Built successfully/Xây dựng thành công
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
-echo "Enter 1 (Ubuntu-22.04) or Enter 2 (Debian-12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Debian-12)"
-read -r python1-2
-wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python$python1-2.py
+echo -e "Enter 1 (Ubuntu-22.04) or Enter 2 (Debian-12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Debian-12)"
+read pythonnumber
+wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python$pythonnumber.py
 echo Downloaded successfully/Đã tải xuống thành công
 echo "Installing Python packages: discord and docker.../Cài đặt các gói Python: discord và docker..."
 pip3 install discord docker
