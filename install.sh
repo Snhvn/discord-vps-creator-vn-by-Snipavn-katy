@@ -42,11 +42,13 @@ wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-b
 echo Downloaded successfully/Đã tải xuống thành công
 echo "Installing Python packages: discord and docker.../Cài đặt các gói Python: discord và docker..."
 pip3 install discord docker
+clear
 echo "Please enter your Discord bot token, Make a bot at discord.dev and get the token, You dont need any intents:"
 echo "Vui lòng nhập token bot Discord của bạn, Tạo một bot tại discord.dev và nhận token, Bạn không cần bất kỳ ý định nào:"
 read -r DISCORD_TOKEN
 echo "Updating main.py with the provided Discord token.../Đang cập nhật main.py bằng token bot Discord được cung cấp..."
 sed -i "s/TOKEN = ''/TOKEN = '$DISCORD_TOKEN'/" main.py
+clear
 echo "Starting the Discord bot.../Đang khởi động bot Discord..."
 echo "To start the bot in the future, run: python3 main.py/Để khởi động bot trong tương lai, hãy chạy: python3 main.py"
 python3 main.py
