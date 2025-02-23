@@ -15,6 +15,7 @@ mkdir discord-bot-vps-creator
 cd discord-bot-vps-creator
 
 echo "Installing python3-pip and docker/Cài đặt python3-pip và docker."
+apt install sudo -y
 sudo apt update
 sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
@@ -37,7 +38,7 @@ sudo docker build -t debian-with-tmate .
 echo Built successfully/Xây dựng thành công
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
 echo "Enter 1 (Ubuntu-22.04) or Enter 2 (Debian-12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Debian-12)"
-read python1-2
+read -r python1-2
 wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python$python1-2.py
 echo Downloaded successfully/Đã tải xuống thành công
 echo "Installing Python packages: discord and docker.../Cài đặt các gói Python: discord và docker..."
