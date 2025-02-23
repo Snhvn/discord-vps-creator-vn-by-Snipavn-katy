@@ -88,7 +88,7 @@ async def change_status():
         if os.path.exists(database_file):
             with open(database_file, 'r') as f:
                 instance_count = len(f.readlines())
-        status = f"with {instance_count} Instances"
+        status = f"với {instance_count} Instances | dsc.gg/servertipacvn"
         await bot.change_presence(activity=discord.Game(name=status))
     except Exception as e:
         print(f"Failed to update status: {e}")
