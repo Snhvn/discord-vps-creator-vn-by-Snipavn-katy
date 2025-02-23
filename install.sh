@@ -11,6 +11,7 @@ echo "YouTube : https://youtube.com/@snipavn205"
 echo "------------------------"
 
 echo "Make your own Free VPS Hosting, Dont Allow Mining/Tạo VPS Hosting miễn phí của riêng bạn, Không cho phép khai thác"
+rm -rf discord-bot-vps-creator
 sudo mkdir discord-bot-vps-creator
 cd discord-bot-vps-creator
 
