@@ -19,9 +19,12 @@ sudo apt update
 sudo apt install -y python3-pip docker.io
 echo Installed successfully
 
-echo "Writing Dockerfile..."
-cat <<EOF > Dockerfile
+echo "Writing Dockerfile-Ubuntu..."
+cat <<EOF > Dockerfile1
 FROM ubuntu:22.04
+echo "Writing Dockerfile-Debian..."
+cat <<EOF > Dockerfile1
+FROM debian:12
 
 RUN apt update
 RUN apt install -y tmate
@@ -30,6 +33,7 @@ EOF
 echo Made successfully - Building Docker image.
 echo "Building Docker Image"
 sudo docker build -t ubuntu-22.04-with-tmate .
+sudo docker build -t debian-12-with-tmate .
 echo Built successfully
 echo "Downloading main.py from the GitHub repository..."
 wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python
