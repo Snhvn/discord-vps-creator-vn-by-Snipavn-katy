@@ -235,10 +235,10 @@ async def create_server_task(interaction):
         subprocess.run(["docker", "rm", container_id])
 async def create_server_task_debian(interaction):
       await interaction.response.send_message(embed=discord.Embed(description="Tạo VPS.\n~# Bot này được cung cấp bởi dsc.gg/servertipacvn.", color=0x00ff00))
-    user = str(interaction.user)
-    if count_user_servers(user) >= SERVER_LIMIT:
-        await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
-        return
+      user = str(interaction.user)
+      if count_user_servers(user) >= SERVER_LIMIT:
+          await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
+          return
 
     image = "debian-with-tmate"
     
