@@ -106,7 +106,7 @@ async def regen_ssh_command(interaction: discord.Interaction, container_name: st
     container_id = get_container_id_from_database(user, container_name)
 
     if not container_id:
-        await interaction.response.send_message(embed=discord.Embed(description="No active instance found for your user.", color=0xff0000))
+        await interaction.response.send_message(embed=discord.Embed(description="Không tìm thấy phiên bản hoạt động nào cho người dùng của bạn.", color=0xff0000))
         return
 
     try:
@@ -208,10 +208,10 @@ async def capture_output(process, keyword):
             return output
     return None
 
-@bot.tree.command(name="port-add", description="Adds a port forwarding rule")
-@app_commands.describe(container_name="The name of the container", container_port="The port in the container")
+@bot.tree.command(name="port-add", description="Thêm quy tắc chuyển tiếp cổng")
+@app_commands.describe(container_name="Tên container của bạn", container_port="Cổng trong container")
 async def port_add(interaction: discord.Interaction, container_name: str, container_port: int):
-    await interaction.response.send_message(embed=discord.Embed(description="Setting up port forwarding. This might take a moment...", color=0x00ff00))
+    await interaction.response.send_message(embed=discord.Embed(description="Đang thiết lập chuyển tiếp cổng. Việc này có thể mất một lúc...", color=0x00ff00))
 
     public_port = generate_random_port()
 
@@ -227,33 +227,33 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
         )
 
         # Respond immediately with the port and public IP
-        await interaction.followup.send(embed=discord.Embed(description=f"Port added successfully. Your service is hosted on {PUBLIC_IP}:{public_port}.", color=0x00ff00))
+        await interaction.followup.send(embed=discord.Embed(description=f"Cổng đã được thêm thành công. Dịch vụ của bạn được lưu trữ trên {PUBLIC_IP}:{public_port}.", color=0x00ff00))
 
     except Exception as e:
         await interaction.followup.send(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
 
-@bot.tree.command(name="port-http", description="Forward HTTP traffic to your container")
-@app_commands.describe(container_name="The name of your container", container_port="The port inside the container to forward")
+@bot.tree.command(name="port-http", description="Chuyển tiếp lưu lượng HTTP đến vùng chứa của bạn")
+@app_commands.describe(container_name="Tên container của bạn", container_port="Cổng bên trong container để chuyển tiếp")
 async def port_forward_website(interaction: discord.Interaction, container_name: str, container_port: int):
     try:
         exec_cmd = await asyncio.create_subprocess_exec(
             "docker", "exec", container_name, "ssh", "-o StrictHostKeyChecking=no", "-R", f"80:localhost:{container_port}", "serveo.net",
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
-        url_line = await capture_output(exec_cmd, "Forwarding HTTP traffic from")
+        url_line = await capture_output(exec_cmd, "Chuyển tiếp lưu lượng HTTP từ")
         if url_line:
             url = url_line.split(" ")[-1]
-            await interaction.response.send_message(embed=discord.Embed(description=f"Website forwarded successfully. Your website is accessible at {url}.", color=0x00ff00))
+            await interaction.response.send_message(embed=discord.Embed(description=f"Trang web đã được chuyển tiếp thành công. Trang web của bạn có thể truy cập tại {url}.", color=0x00ff00))
         else:
             await interaction.response.send_message(embed=discord.Embed(description="Failed to capture forwarding URL.", color=0xff0000))
     except subprocess.CalledProcessError as e:
         await interaction.response.send_message(embed=discord.Embed(description=f"Error executing website forwarding: {e}", color=0xff0000))
 
 async def create_server_task(interaction):
-    await interaction.response.send_message(embed=discord.Embed(description="Creating Instance, This takes a few seconds.", color=0x00ff00))
+    await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây.", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
-        await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
+        await interaction.followup.send(embed=discord.Embed(description="```Error: Đã đạt đến giới hạn của Instances```", color=0xff0000))
         return
 
     image = "ubuntu-22.04-with-tmate"
@@ -286,7 +286,7 @@ async def create_server_task(interaction):
         subprocess.run(["docker", "rm", container_id])
 
 async def create_server_task_debian(interaction):
-    await interaction.response.send_message(embed=discord.Embed(description="Creating Instance, This takes a few seconds.", color=0x00ff00))
+    await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
         await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
