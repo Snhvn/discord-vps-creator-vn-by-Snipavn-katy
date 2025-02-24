@@ -137,7 +137,7 @@ async def start_server(interaction: discord.Interaction, container_name: str):
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
             await interaction.user.send(embed=discord.Embed(description=f"<:AC_meow:1174719189429276682>Instance Bắt đầu\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)", color=0x00ff00))
-            await interaction.response.send_message(embed=discord.Embed(description="Instance started successfully. Check your DMs for details.", color=0x00ff00))
+            await interaction.response.send_message(embed=discord.Embed(description="Phiên bản đã khởi động thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
         else:
             await interaction.response.send_message(embed=discord.Embed(description="Instance started, but failed to get SSH session line.", color=0xff0000))
     except subprocess.CalledProcessError as e:
@@ -171,7 +171,7 @@ async def restart_server(interaction: discord.Interaction, container_name: str):
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
-            await interaction.user.send(embed=discord.Embed(description=f"### Instance Restarted\nSSH Session Command: ```{ssh_session_line}```\nOS: Ubuntu 22.04", color=0x00ff00))
+            await interaction.user.send(embed=discord.Embed(description=f"### <:AC_meow:1174719189429276682>Instance Khởi Động Lại\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS: Ubuntu 22.04", color=0x00ff00))
             await interaction.response.send_message(embed=discord.Embed(description="Instance restarted successfully. Check your DMs for details.", color=0x00ff00))
         else:
             await interaction.response.send_message(embed=discord.Embed(description="Instance restarted, but failed to get SSH session line.", color=0xff0000))
@@ -277,9 +277,9 @@ async def create_server_task(interaction):
 
     ssh_session_line = await capture_ssh_session_line(exec_cmd)
     if ssh_session_line:
-        await interaction.user.send(embed=discord.Embed(description=f"### Successfully created Instance\nSSH Session Command: ```{ssh_session_line}```\nOS: Ubuntu 22.04", color=0x00ff00))
+        await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS: Ubuntu 22.04", color=0x00ff00))
         add_to_database(user, container_id, ssh_session_line)
-        await interaction.followup.send(embed=discord.Embed(description="Instance created successfully. Check your DMs for details.", color=0x00ff00))
+        await interaction.followup.send(embed=discord.Embed(description="VPS đã được tạo thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
     else:
         await interaction.followup.send(embed=discord.Embed(description="Something went wrong or the Instance is taking longer than expected. If this problem continues, Contact Support.", color=0xff0000))
         subprocess.run(["docker", "kill", container_id])
