@@ -22,10 +22,9 @@ sudo apt update
 sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
 echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
-wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile1
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockefile.sh && sh install-dockefile.sh
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
 wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
-
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
 sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo docker build -t debian-with-tmate -f Dockerfile2 .
