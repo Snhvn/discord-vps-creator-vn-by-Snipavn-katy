@@ -172,11 +172,11 @@ async def restart_server(interaction: discord.Interaction, container_name: str):
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
             await interaction.user.send(embed=discord.Embed(description=f"### <:AC_meow:1174719189429276682>Instance Khởi Động Lại\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS: Ubuntu 22.04", color=0x00ff00))
-            await interaction.response.send_message(embed=discord.Embed(description="Instance restarted successfully. Check your DMs for details.", color=0x00ff00))
+            await interaction.response.send_message(embed=discord.Embed(description="Phiên bản đã khởi động lại thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
         else:
-            await interaction.response.send_message(embed=discord.Embed(description="Instance restarted, but failed to get SSH session line.", color=0xff0000))
+            await interaction.response.send_message(embed=discord.Embed(description="Đã khởi động lại phiên bản nhưng không nhận được dòng phiên SSH.", color=0xff0000))
     except subprocess.CalledProcessError as e:
-        await interaction.response.send_message(embed=discord.Embed(description=f"Error restarting instance: {e}", color=0xff0000))
+        await interaction.response.send_message(embed=discord.Embed(description=f"Lỗi khi khởi động lại phiên bản: {e}", color=0xff0000))
 
 def get_container_id_from_database(user, container_name):
     if not os.path.exists(database_file):
@@ -313,43 +313,43 @@ async def create_server_task_debian(interaction):
 
     ssh_session_line = await capture_ssh_session_line(exec_cmd)
     if ssh_session_line:
-        await interaction.user.send(embed=discord.Embed(description=f"### Successfully created Instance\nSSH Session Command: ```{ssh_session_line}```\nOS: Debian", color=0x00ff00))
+        await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS: Debian 12", color=0x00ff00))
         add_to_database(user, container_id, ssh_session_line)
-        await interaction.followup.send(embed=discord.Embed(description="Instance created successfully. Check your DMs for details.", color=0x00ff00))
+        await interaction.followup.send(embed=discord.Embed(description="Phiên bản đã được tạo thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
     else:
         await interaction.followup.send(embed=discord.Embed(description="Something went wrong or the Instance is taking longer than expected. If this problem continues, Contact Support.", color=0xff0000))
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
 
-@bot.tree.command(name="deploy-ubuntu", description="Creates a new Instance with Ubuntu 22.04")
+@bot.tree.command(name="deploy-ubuntu", description="Tạo một Instance mới với Ubuntu 22.04")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task(interaction)
 
-@bot.tree.command(name="deploy-debian", description="Creates a new Instance with Debian 12")
+@bot.tree.command(name="deploy-debian", description="Tạo một Instance mới với Debian 12")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task_debian(interaction)
 
-@bot.tree.command(name="regen-ssh", description="Generates a new SSH session for your instance")
-@app_commands.describe(container_name="The name/ssh-command of your Instance")
+@bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
+@app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
 async def regen_ssh(interaction: discord.Interaction, container_name: str):
     await regen_ssh_command(interaction, container_name)
 
-@bot.tree.command(name="start", description="Starts your instance")
-@app_commands.describe(container_name="The name/ssh-command of your Instance")
+@bot.tree.command(name="start", description="Bắt đầu Instances của bạn")
+@app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
 async def start(interaction: discord.Interaction, container_name: str):
     await start_server(interaction, container_name)
 
-@bot.tree.command(name="stop", description="Stops your instance")
-@app_commands.describe(container_name="The name/ssh-command of your Instance")
+@bot.tree.command(name="stop", description="Dừng Instances của bạn")
+@app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
 async def stop(interaction: discord.Interaction, container_name: str):
     await stop_server(interaction, container_name)
 
-@bot.tree.command(name="restart", description="Restarts your instance")
+@bot.tree.command(name="restart", description="Khởi động lại Instances của bạn")
 @app_commands.describe(container_name="The name/ssh-command of your Instance")
 async def restart(interaction: discord.Interaction, container_name: str):
     await restart_server(interaction, container_name)
 
-@bot.tree.command(name="ping", description="Check the bot's latency.")
+@bot.tree.command(name="ping", description="Kiểm tra ping của bot.")
 async def ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
     embed = discord.Embed(
@@ -359,15 +359,15 @@ async def ping(interaction: discord.Interaction):
     )
     await interaction.response.send_message(embed=embed)
 
-@bot.tree.command(name="list", description="Lists all your Instances")
+@bot.tree.command(name="list", description="Liệt kê tất cả các Instances của bạn")
 async def list_servers(interaction: discord.Interaction):
     user = str(interaction.user)
     servers = get_user_servers(user)
     if servers:
-        embed = discord.Embed(title="Your Instances", color=0x00ff00)
+        embed = discord.Embed(title="Instances của bạn", color=0x00ff00)
         for server in servers:
             _, container_name, _ = server.split('|')
-            embed.add_field(name=container_name, value="Description: A server with 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Core.", inline=False)
+            embed.add_field(name=container_name, value="Mô tả: Một máy chủ với 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Core.", inline=False)
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message(embed=discord.Embed(description="You have no servers.", color=0xff0000))
