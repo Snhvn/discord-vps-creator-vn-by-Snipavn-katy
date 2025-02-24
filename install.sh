@@ -22,7 +22,7 @@ sudo apt update
 sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
 echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
-https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/Dockerfile1
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/Dockerfile1
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
 wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
 
