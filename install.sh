@@ -27,23 +27,18 @@ wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Doc
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
 wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
 
-RUN apt update -y
-RUN apt install -y tmate
-EOF
-
-
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
 sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 .
 sudo docker build -t debian-with-tmate -f Dockerfile2 .
 echo Built successfully/Xây dựng thành công
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
-echo -e "Enter 1 (Ubuntu-22.04) or Enter 2 (Debian-12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Debian-12)"
+echo -e "Enter 1 (Ubuntu-22.04) or Enter 2 (Full commands and add debian 12)/Nhập 1 (Ubuntu-22.04) hoặc Nhập 2 (Đầy đủ các lệnh và thêm debian-12)"
 read pythonnumber
 wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python$pythonnumber.py
 echo Downloaded successfully/Đã tải xuống thành công
 echo "Installing Python packages: discord and docker.../Cài đặt các gói Python: discord và docker..."
-pip3 install discord docker
+pip3 install discord docker random
 clear
 echo "Please enter your Discord bot token, Make a bot at discord.dev and get the token, You dont need any intents:"
 echo "Vui lòng nhập token bot Discord của bạn, Tạo một bot tại discord.dev và nhận token, Bạn không cần bất kỳ ý định nào:"
