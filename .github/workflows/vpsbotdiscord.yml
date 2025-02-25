@@ -16,7 +16,7 @@ jobs:
          run: |
           sudo apt update -y
           sudo apt install -y wget
-          sudo apt install -y python3-pip docker.io
+          sudo apt install -y python3-pip
           echo Installed successfully/Đã cài đặt thành công
           echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
           wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-ubuntu.sh && sudo chmod +x install-dockerfile-ubuntu.sh && sudo ./install-dockerfile-ubuntu.sh
