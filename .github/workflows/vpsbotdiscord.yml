@@ -35,7 +35,6 @@ jobs:
          run: |
           echo "Please enter your Discord bot token, Make a bot at discord.dev and get the token, You dont need any intents:"
           echo "Vui lòng nhập token bot Discord của bạn, Tạo một bot tại discord.dev và nhận token, Bạn không cần bất kỳ ý định nào:"
-          read -r DISCORD_TOKEN
           echo "Updating main.py with the provided Discord token.../Đang cập nhật main.py bằng token bot Discord được cung cấp..."
           sed -i "s/TOKEN = ''/TOKEN = '${{github.event.inputs.tokenbot}}'/" main.py
           echo "Starting the Discord bot.../Đang khởi động bot Discord..."
