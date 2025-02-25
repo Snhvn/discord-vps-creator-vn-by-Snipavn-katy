@@ -15,12 +15,11 @@ jobs:
        - name: Cài Python và Docker
          run: |
           sudo apt update -y
-          apt install -y sudo wget
-          sudo apt update
+          sudo apt install -y wget
           sudo apt install -y python3-pip docker.io
           echo Installed successfully/Đã cài đặt thành công
           echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
-          wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-ubuntu.sh && chmod +x install-dockerfile-ubuntu.sh && sudo ./install-dockerfile-ubuntu.sh
+          wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-ubuntu.sh && sudo chmod +x install-dockerfile-ubuntu.sh && sudo ./install-dockerfile-ubuntu.sh
           echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
           wget https://github.com/katy-the-kat/discord-vps-creator/raw/refs/heads/main/Dockerfile2
           echo Made successfully - Building Docker image.
@@ -31,7 +30,7 @@ jobs:
           wget -O main.py https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/python{{github.event.inputs.pythonnumber}}.py
           echo Downloaded successfully/Đã tải xuống thành công
           echo "Installing Python packages: discord and docker.../Cài đặt các gói Python: discord và docker..."
-          pip3 install discord docker
+          sudo pip3 install discord docker
        - name: Nhập thông tin Token
          run: |
           echo "Please enter your Discord bot token, Make a bot at discord.dev and get the token, You dont need any intents:"
