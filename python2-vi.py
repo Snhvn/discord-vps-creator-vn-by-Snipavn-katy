@@ -237,7 +237,7 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
 async def port_forward_website(interaction: discord.Interaction, container_name: str, container_ngroktoken: str, container_port: int):
     try:
         exec_cmd = await asyncio.create_subprocess_exec(
-            "docker", "exec", container_name, "./ngrok", "config", "add-authtoken", container_ngroktoken, "./ngrok http", container_port,
+            "docker", "exec", container_name, "ssh", "-o StrictHostKeyChecking=no", "-R", f"80:localhost:{container_port}", "serveo.net",
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         url_line = await capture_output(exec_cmd, "Chuyển tiếp lưu lượng HTTP từ")
