@@ -233,11 +233,12 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
         await interaction.followup.send(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
 
 @bot.tree.command(name="port-http", description="Chuyển tiếp lưu lượng HTTP đến vùng chứa của bạn")
-@app_commands.describe(container_name="Tên container của bạn", container_port="Cổng bên trong container để chuyển tiếp")
-async def port_forward_website(interaction: discord.Interaction, container_name: str, container_port: int):
+@app_commands.describe(container_name="Tên container của bạn", container_ngroktoken="Nhập ngrok token của bạn(Tạo ngroktoken:ngrok.com)" ,container_port="Cổng bên trong container để chuyển tiếp")
+async def port_forward_website(interaction: discord.Interaction, container_name: str, container_ngroktoken: str, container_port: int):
     try:
         exec_cmd = await asyncio.create_subprocess_exec(
-            "docker", "exec", container_name, "ssh", "-o StrictHostKeyChecking=no", "-R", f"80:localhost:{container_port}", "serveo.net",
+            "docker", "exec", container_name, "./ngrok", "config", "add-authtoken", f"{container_ngroktoken}", 
+            f"./ngrok http {container_port}",
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         url_line = await capture_output(exec_cmd, "Chuyển tiếp lưu lượng HTTP từ")
