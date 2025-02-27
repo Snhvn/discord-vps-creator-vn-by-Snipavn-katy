@@ -1,4 +1,4 @@
-cat <<EOF > Dockerfile1
+cat <<EOF > Dockerfile2
 FROM debian:12
 
 RUN apt update
