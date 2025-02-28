@@ -25,6 +25,8 @@ echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
 wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-ubuntu.sh && chmod +x install-dockerfile-ubuntu.sh && sudo ./install-dockerfile-ubuntu.sh
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
 wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-debian.sh && chmod +x install-dockerfile-debian.sh && sudo ./install-dockerfile-debian.sh
+echo "Writing Dockerfile-Alpine.../Viết Dockerfile-Alpine..."
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-alpine.sh && chmod +x install-dockerfile-alpine.sh && sudo ./install-dockerfile-alpine.sh
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
 sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo docker build -t debian-with-tmate -f Dockerfile2 . && sudo docker build -t alpine-with-tmate -f Dockerfile3 .
