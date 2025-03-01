@@ -18,16 +18,11 @@ SERVER_LIMIT = 2
 database_file = 'database.txt'
 
 intents = discord.Intents.default()
-intents.messages = False
-intents.message_content = False
+intents.messages = True
+intents.message_content = True
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
-
-async def on_message(message):
-    # Check if the message sender is a bot or the message is in DM
-    if message.author.bot or message.guild:
-        return
 
 # port gen forward module < i forgot this shit in the start
 def generate_random_port(): 
