@@ -348,7 +348,7 @@ async def create_server_task_alpine(interaction):
 
     ssh_session_line = await capture_ssh_session_line(exec_cmd)
     if ssh_session_line:
-        await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS:<:debian:1344300752411164682>Alpine 3.19", color=0x00ff00))
+        await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS:<:alpine:1345340462055166012>Alpine 3.19", color=0x00ff00))
         add_to_database(user, container_id, ssh_session_line)
         await interaction.followup.send(embed=discord.Embed(description="Phiên bản đã được tạo thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
     else:
@@ -436,7 +436,7 @@ async def help_command(interaction: discord.Interaction):
     embed = discord.Embed(title="<:info:1147509120149246062>Information<:info:1147509120149246062>", color=0x00ff00)
     embed.add_field(name="<:ubuntu:1344300653324927046>|/deploy-ubuntu", value="Tạo một Instance mới với Ubuntu 22.04.", inline=False)
     embed.add_field(name="<:debian:1344300752411164682>|/deploy-debian", value="Tạo một Instance mới với Debian 12.", inline=False)
-    embed.add_field(name="<:debian:1344300752411164682>|/deploy-alpine", value="Tạo một Instance mới với Alpine 3.19.", inline=False)
+    embed.add_field(name="<:alpine:1345340462055166012>|/deploy-alpine", value="Tạo một Instance mới với Alpine 3.19.", inline=False)
     embed.add_field(name="/remove <ssh_command/Name>", value="Xóa một máy chủ", inline=False)
     embed.add_field(name="/start <ssh_command/Name>", value="Khởi động máy chủ.", inline=False)
     embed.add_field(name="/stop <ssh_command/Name>", value="Dừng một máy chủ.", inline=False)
