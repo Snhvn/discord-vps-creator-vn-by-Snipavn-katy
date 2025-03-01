@@ -24,6 +24,11 @@ intents.message_content = False
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
 
+async def on_message(message):
+    # Check if the message sender is a bot or the message is in DM
+    if message.author.bot or message.guild:
+        return
+
 # port gen forward module < i forgot this shit in the start
 def generate_random_port(): 
     return random.randint(1025, 65535)
