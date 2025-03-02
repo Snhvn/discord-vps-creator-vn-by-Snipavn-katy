@@ -197,7 +197,7 @@ async def execute_command(command):
     stdout, stderr = await process.communicate()
     return stdout.decode(), stderr.decode()
 
-PUBLIC_IP = '138.68.79.95'
+PUBLIC_IP = '0.0.0.0'
 
 async def capture_output(process, keyword):
     while True:
@@ -254,7 +254,7 @@ async def create_server_task(interaction):
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây.", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
-        await interaction.followup.send(embed=discord.Embed(description="```Error: Đã đạt đến giới hạn của Instances```", color=0xff0000))
+        await interaction.followup.send(embed=discord.Embed(description="```Đã hết lượt tạo vps```", color=0xff0000))
         return
 
     image = "ubuntu-22.04-with-tmate"
@@ -368,15 +368,6 @@ async def deploy_ubuntu(interaction: discord.Interaction):
 @bot.tree.command(name="deploy-alpine", description="Tạo một Instance mới với Alpine 3.19")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task_alpine(interaction)
-
-@bot.command()
-async def deploy_ubuntu(ctx):
-    allowed_role = discord.utils.get(ctx.guild.roles, id=allowed_role_id)
-    
-    if allowed_role in ctx.author.roles:
-        await ctx.send(f'Hello, {ctx.author.mention}!')
-    else:
-        await ctx.send('Bạn không có vai trò cần thiết để sử dụng lệnh này.')
         
 @bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
 @app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
@@ -402,8 +393,8 @@ async def restart(interaction: discord.Interaction, container_name: str):
 async def ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
     embed = discord.Embed(
-        title="🏓 Pong!",
-        description=f"Latency: {latency}ms",
+        title="🔴 Ping của bot!",
+        description=f"Ping: {latency}ms",
         color=discord.Color.green()
     )
     await interaction.response.send_message(embed=embed)
@@ -416,7 +407,7 @@ async def list_servers(interaction: discord.Interaction):
         embed = discord.Embed(title="Instances của bạn", color=0x00ff00)
         for server in servers:
             _, container_name, _ = server.split('|')
-            embed.add_field(name=container_name, value="Mô tả: Một máy chủ với 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Core.", inline=False)
+            embed.add_field(name=container_name, value="Cấu hình: Một máy chủ với 2GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Cpu.", inline=False)
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message(embed=discord.Embed(description="You have no servers.", color=0xff0000))
