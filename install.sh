@@ -1,5 +1,5 @@
 #!/bin/bash
-
+INSTALL_FLAG="discord-bot-vps-creator"
 echo " ██ ███    ███ ██    ██  ██████  ███████ ██    ██ ██   ██ ██  
 ██  ████  ████  ██  ██  ██    ██ ██      ██    ██ ██   ██  ██ 
 ██  ██ ████ ██   ████   ██    ██ █████   ██    ██ ███████  ██ 
@@ -11,6 +11,10 @@ echo "YouTube : https://youtube.com/@snipavn205"
 echo "------------------------"
 echo "Wait 3s to install/Đợi 3s để cài"
 echo "Make your own Free VPS Hosting, Dont Allow Mining/Tạo VPS Hosting miễn phí của riêng bạn, Không cho phép khai thác"
+if [ -f "$INSTALL_FLAG" ]; then
+    echo -e "\r\x1b[31;1m┃\x1b[0;31m Folder is already have had. Do you want to continue and will the folder be deleted?...\x1b[0m"
+    
+fi
 sleep 3
 rm -rf discord-bot-vps-creator
 mkdir -p discord-bot-vps-creator
