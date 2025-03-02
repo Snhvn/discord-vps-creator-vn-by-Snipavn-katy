@@ -260,7 +260,7 @@ async def create_server_task(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "--cpus 1", "--memory 2G", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -296,7 +296,7 @@ async def create_server_task_debian(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "--cpus 1", "--memory 2G", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -331,7 +331,7 @@ async def create_server_task_alpine(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "--cpus 1", "--memory 2G", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -406,7 +406,7 @@ async def list_servers(interaction: discord.Interaction):
         embed = discord.Embed(title="Instances của bạn", color=0x00ff00)
         for server in servers:
             _, container_name, _ = server.split('|')
-            embed.add_field(name=container_name, value="Cấu hình: Một máy chủ với 2GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Cpu.", inline=False)
+            embed.add_field(name=container_name, value="Cấu hình: Một máy chủ với 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Cpu.", inline=False)
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message(embed=discord.Embed(description="You have no servers.", color=0xff0000))
