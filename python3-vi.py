@@ -355,6 +355,7 @@ async def create_server_task_alpine(interaction):
         await interaction.followup.send(embed=discord.Embed(description="Something went wrong or the Instance is taking longer than expected. If this problem continues, Contact Support.", color=0xff0000))
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
+            
 async def create_server_task_fedora(interaction):
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
@@ -402,6 +403,10 @@ async def deploy_ubuntu(interaction: discord.Interaction):
 @bot.tree.command(name="deploy-alpine", description="Tạo một Instance mới với Alpine 3.19")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task_alpine(interaction)
+
+@bot.tree.command(name="deploy-fedora", description="Tạo một Instance mới với Fedora")
+async def deploy_ubuntu(interaction: discord.Interaction):
+    await create_server_task_fedora(interaction)
         
 @bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
 @app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
@@ -472,6 +477,7 @@ async def help_command(interaction: discord.Interaction):
     embed.add_field(name="<:ubuntu:1344300653324927046>|/deploy-ubuntu", value="Tạo một Instance mới với Ubuntu 22.04.", inline=False)
     embed.add_field(name="<:debian:1344300752411164682>|/deploy-debian", value="Tạo một Instance mới với Debian 12.", inline=False)
     embed.add_field(name="<:alpine:1345340462055166012>|/deploy-alpine", value="Tạo một Instance mới với Alpine 3.19.", inline=False)
+    embed.add_field(name="|/deploy-fedora", value="Tạo một Instance mới với Fedora.", inline=False)
     embed.add_field(name="/remove <ssh_command/Name>", value="Xóa một máy chủ", inline=False)
     embed.add_field(name="/start <ssh_command/Name>", value="Khởi động máy chủ.", inline=False)
     embed.add_field(name="/stop <ssh_command/Name>", value="Dừng một máy chủ.", inline=False)
