@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Code By SNIPA VN | https://youtube.com/@snipavn205
+echo "Code By SNIPA VN | https://youtube.com/@snipavn205"
 echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-ubuntu.sh && chmod +x install-dockerfile-ubuntu.sh && sudo ./install-dockerfile-ubuntu.sh
 echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian"
