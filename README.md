@@ -4,5 +4,4 @@
 ```
 apt install -y curl && bash <(curl -Ls https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/install.sh)
 ```
-- File
-+ [python2-en.py](https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/Screenshot_2025-02-24-13-45-36-66_b01ec2a14c04824276048023717266ae.jpg)
+# [Server Support Discord:](https://dsc.gg/servertipacvn) 
