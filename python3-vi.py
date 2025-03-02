@@ -16,14 +16,24 @@ TOKEN = '' # TOKEN HERE
 RAM_LIMIT = '2g'
 SERVER_LIMIT = 2
 database_file = 'database.txt'
-
+allowed_role_id = YOUR_ROLE_ID
 intents = discord.Intents.default()
-intents.messages = True
-intents.message_content = True
+intents.messages = false
+intents.message_content = false
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
 
+
+@bot.command()
+async def hello(ctx):
+    allowed_role = discord.utils.get(ctx.guild.roles, id=allowed_role_id)
+    
+    if allowed_role in ctx.author.roles:
+        await ctx.send(f'Hello, {ctx.author.mention}!')
+    else:
+        await ctx.send('Bạn không có vai trò cần thiết để sử dụng lệnh này.')
+        
 # port gen forward module < i forgot this shit in the start
 def generate_random_port(): 
     return random.randint(1025, 65535)
