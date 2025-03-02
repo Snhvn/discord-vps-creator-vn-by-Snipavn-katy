@@ -16,7 +16,7 @@ TOKEN = '' # TOKEN HERE
 RAM_LIMIT = '2g'
 SERVER_LIMIT = 2
 database_file = 'database.txt'
-allowed_role_id = YOUR_ROLE_ID
+allowed_role_id = 1345552762922074205
 intents = discord.Intents.default()
 intents.messages = false
 intents.message_content = false
@@ -26,7 +26,7 @@ client = docker.from_env()
 
 
 @bot.command()
-async def hello(ctx):
+async def command_assess(ctx):
     allowed_role = discord.utils.get(ctx.guild.roles, id=allowed_role_id)
     
     if allowed_role in ctx.author.roles:
