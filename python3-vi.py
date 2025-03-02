@@ -16,10 +16,9 @@ TOKEN = '' # TOKEN HERE
 RAM_LIMIT = '2g'
 SERVER_LIMIT = 1
 database_file = 'database.txt'
-allowed_role_id = 1345552762922074205
 intents = discord.Intents.default()
-intents.messages = True
-intents.message_content = True
+intents.messages = False
+intents.message_content = False
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
