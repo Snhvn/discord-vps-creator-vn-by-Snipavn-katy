@@ -1,7 +1,10 @@
 # discord-vps-creator-vn-by-Snipavn-katy
-# Lưu ý chỉ dịch sang Tiếng Việt nhưng có một số từ Tiếng Anh mình chưa dịch nên vì thế chịu học nhé 🤫🧏
-- Command Install
+- Command Install/ Lệnh cài
 ```
 apt install -y curl && bash <(curl -Ls https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/install.sh)
 ```
+* Those File Python / Những file python
+ - Can only deploy Ubuntu (English/Vietnamese) (Tiếng Anh/Tiếng Việt)
+  + [python1-en]() 
+  + [python1-vi]()
 # [Server Support Discord:](https://dsc.gg/servertipacvn) 
