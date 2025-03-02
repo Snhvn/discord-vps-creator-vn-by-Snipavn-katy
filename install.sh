@@ -21,9 +21,7 @@ apt install -y sudo wget
 sudo apt update
 sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
-echo "Writing Dockerfile-Ubuntu.../Viết Dockerfile-Ubuntu..."
-echo "Writing Dockerfile-Debian.../Viết Dockerfile-Debian..."
-echo "Writing Dockerfile-Alpine.../Viết Dockerfile-Alpine..."
+echo "Writing Dockerfile.../Viết Dockerfile..."
 wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile.sh && chmod +x install-dockerfile.sh && sudo ./install-dockerfile.sh 
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
