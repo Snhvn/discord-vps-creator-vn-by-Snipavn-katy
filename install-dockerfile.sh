@@ -14,3 +14,5 @@ echo "Writing Dockerfile-Alpine.../Viết Dockerfile-Alpine"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-alpine.sh && chmod +x install-dockerfile-alpine.sh && sudo ./install-dockerfile-alpine.sh
 echo "Writing Dockerfile-Fedora.../Viết Dockerfile-Fedora"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-fedora.sh && chmod +x install-dockerfile-fedora.sh && sudo ./install-dockerfile-fedora.sh
+echo "Writing Dockerfile-Openwrt.../Viết Dockerfile-Openwrt"
+wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-openwrt.sh && chmod +x install-dockerfile-openwrt.sh && sudo ./install-dockerfile-openwrt.sh
