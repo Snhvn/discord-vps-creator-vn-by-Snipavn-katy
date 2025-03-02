@@ -1,4 +1,4 @@
-# discord-vps-creator-vn-by-Snipavn-katy
+# discord-vps-creator-vn/en-by-Snipavn-katy
 - Command Install/ Lệnh cài
 ```
 apt install -y curl && bash <(curl -Ls https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/install.sh)
