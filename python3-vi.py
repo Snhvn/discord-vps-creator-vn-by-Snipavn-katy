@@ -21,7 +21,7 @@ intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='/', intents=intents)
+bot = commands.Bot(command_prefix='<@1236584616215711835>', intents=intents)
 client = docker.from_env()
 
         
