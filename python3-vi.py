@@ -355,6 +355,41 @@ async def create_server_task_alpine(interaction):
         await interaction.followup.send(embed=discord.Embed(description="Something went wrong or the Instance is taking longer than expected. If this problem continues, Contact Support.", color=0xff0000))
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
+async def create_server_task_fedora(interaction):
+    await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
+    user = str(interaction.user)
+    if count_user_servers(user) >= SERVER_LIMIT:
+        await interaction.followup.send(embed=discord.Embed(description="```Error: Instance Limit-reached```", color=0xff0000))
+        return
+
+    image = "fedora-with-tmate"
+    
+    try:
+        container_id = subprocess.check_output([
+            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
+        ]).strip().decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
+        return
+
+    try:
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+                                                        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        await interaction.followup.send(embed=discord.Embed(description=f"Error executing tmate in Docker container: {e}", color=0xff0000))
+        subprocess.run(["docker", "kill", container_id])
+        subprocess.run(["docker", "rm", container_id])
+        return
+
+    ssh_session_line = await capture_ssh_session_line(exec_cmd)
+    if ssh_session_line:
+        await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS:<:alpine:1345340462055166012>Fedora", color=0x00ff00))
+        add_to_database(user, container_id, ssh_session_line)
+        await interaction.followup.send(embed=discord.Embed(description="Phiên bản đã được tạo thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
+    else:
+        await interaction.followup.send(embed=discord.Embed(description="Something went wrong or the Instance is taking longer than expected. If this problem continues, Contact Support.", color=0xff0000))
+        subprocess.run(["docker", "kill", container_id])
+        subprocess.run(["docker", "rm", container_id])
 
 @bot.tree.command(name="deploy-ubuntu", description="Tạo một Instance mới với Ubuntu 22.04")
 async def deploy_ubuntu(interaction: discord.Interaction):
