@@ -18,8 +18,8 @@ SERVER_LIMIT = 2
 database_file = 'database.txt'
 allowed_role_id = 1345552762922074205
 intents = discord.Intents.default()
-intents.messages = false
-intents.message_content = false
+intents.messages = False
+intents.message_content = False
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
