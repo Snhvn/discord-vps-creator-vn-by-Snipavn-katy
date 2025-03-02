@@ -18,21 +18,12 @@ SERVER_LIMIT = 2
 database_file = 'database.txt'
 allowed_role_id = 1345552762922074205
 intents = discord.Intents.default()
-intents.messages = False
-intents.message_content = False
+intents.messages = True
+intents.message_content = True
 
 bot = commands.Bot(command_prefix='/', intents=intents)
 client = docker.from_env()
 
-
-@bot.command()
-async def command_assess(ctx):
-    allowed_role = discord.utils.get(ctx.guild.roles, id=allowed_role_id)
-    
-    if allowed_role in ctx.author.roles:
-        await ctx.send(f'Hello, {ctx.author.mention}!')
-    else:
-        await ctx.send('Bạn không có vai trò cần thiết để sử dụng lệnh này.')
         
 # port gen forward module < i forgot this shit in the start
 def generate_random_port(): 
@@ -369,7 +360,7 @@ async def create_server_task_alpine(interaction):
 @bot.tree.command(name="deploy-ubuntu", description="Tạo một Instance mới với Ubuntu 22.04")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task(interaction)
-
+        
 @bot.tree.command(name="deploy-debian", description="Tạo một Instance mới với Debian 12")
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task_debian(interaction)
@@ -378,6 +369,15 @@ async def deploy_ubuntu(interaction: discord.Interaction):
 async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task_alpine(interaction)
 
+@bot.command()
+async def deploy_ubuntu(ctx):
+    allowed_role = discord.utils.get(ctx.guild.roles, id=allowed_role_id)
+    
+    if allowed_role in ctx.author.roles:
+        await ctx.send(f'Hello, {ctx.author.mention}!')
+    else:
+        await ctx.send('Bạn không có vai trò cần thiết để sử dụng lệnh này.')
+        
 @bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
 @app_commands.describe(container_name="Tên/ssh-command của Instance của bạn")
 async def regen_ssh(interaction: discord.Interaction, container_name: str):
