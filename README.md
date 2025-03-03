@@ -1,5 +1,6 @@
 # discord-vps-creator-vn/en-by-Snipavn-katy
 - Command Install/ Lệnh cài (Suppot Os : Ubuntu and Debian , Alpine is coming soon/Hệ điều hành hỗ trợ: Ubuntu và Debian, Alpine sẽ sớm ra mắt)
+_________________________________
   + Ubuntu and Debian
 ```
 apt install -y curl && bash <(curl -Ls https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/install.sh)
