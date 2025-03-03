@@ -12,6 +12,6 @@ ________________________________
   + [python2-en.py](https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/python2-en.py)
   + [python2-vi.py](https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/python2-vi.py)
 - Can only deploy Ubuntu,Debian,Alpine,Fedora,Openwrt,... and similar to "python2-en/vi.py"
-  + [python3-en.py]() : Coming Soon
+  + [python3-en.py](https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/python3-vi.py)
   + [python3-vi.py](https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/python3-vi.py)
 # [Server Support Discord:](https://dsc.gg/servertipacvn) 
