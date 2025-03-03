@@ -1,5 +1,5 @@
 #!/bin/bash
-INSTALL_FLAG="/discord-bot-vps-creator/"
+INSTALL_FLAG="~/discord-bot-vps-creator/"
 echo " ██ ███    ███ ██    ██  ██████  ███████ ██    ██ ██   ██ ██  
 ██  ████  ████  ██  ██  ██    ██ ██      ██    ██ ██   ██  ██ 
 ██  ██ ████ ██   ████   ██    ██ █████   ██    ██ ███████  ██ 
