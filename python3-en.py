@@ -14,7 +14,7 @@ from discord import app_commands
 
 TOKEN = '' # TOKEN HERE
 RAM_LIMIT = '2g'
-SERVER_LIMIT = 12
+SERVER_LIMIT = 1
 database_file = 'database.txt'
 
 intents = discord.Intents.default()
