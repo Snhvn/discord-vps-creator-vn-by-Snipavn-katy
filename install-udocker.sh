@@ -8,10 +8,9 @@ sudo pip install udocker
 echo "Đã Tải Xong Package Python-Udocker"
 sleep 1
 clear
-echo -e "Nhập Tên User của Udocker"
-read newuser
-adduser --disabled-password --gecos '' $newuser
+echo -e "User mặc định của Name Udocker là discordvps"
+adduser --disabled-password --gecos '' discordvps
 clear 
 echo "Code By SNIPA VN"
 echo "Đã tải xong Udocker"
-echo "To run Udocker /Để Chạy Udocker : "sudo -u $newuser udocker (run/setup) (container image)'"
+echo "To run Udocker /Để Chạy Udocker : "sudo -u discordvps udocker (run/setup) (container image)'"
