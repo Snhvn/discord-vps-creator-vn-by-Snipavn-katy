@@ -27,12 +27,10 @@ echo "Installing Docker (Ubuntu): Enter "docker" | Udocker (Ubuntu Clone): Enter
 read dockerorudocker
 wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-$dockerorudocker.sh && chmod +x install-$dockerorudocker.sh && sudo ./install-$dockerorudocker.sh && rm install-$dockerorudocker.sh
 echo Installed successfully/Đã cài đặt thành công
+echo "Enter "docker": to install dockerfile | Enter "udocker": to install udockerfile"
+read dockerfileorudockerfile
 echo "Writing Dockerfile.../Viết Dockerfile..."
-wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile.sh && chmod +x install-dockerfile.sh && sudo ./install-dockerfile.sh && rm install-dockerfile.sh
-echo Made successfully - Building Docker image.
-echo "Building Docker Image/Xây dựng hình ảnh Docker"
-sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo docker build -t debian-with-tmate -f Dockerfile2 . && sudo docker build -t alpine-with-tmate -f Dockerfile3 . && sudo docker build -t fedora-with-tmate -f Dockerfile4 . #&& sudo docker build -t openwrt-with-tmate -f Dockerfile5 .
-echo Built successfully/Xây dựng thành công
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-$dockerfileorudockerfile.sh && chmod +x install-dockerfile-$dockerfileorudockerfile.sh && sudo ./install-dockerfile-$dockerfileorudockerfile.sh && rm install-dockerfile-$dockerfileorudockerfile.sh
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
 echo -e "Enter "1-en" (English) (Ubuntu-22.04) or Enter "2-en" (English) (Full commands and add debian 12)/Nhập "1-vi" (Tiếng Việt) (Ubuntu-22.04) hoặc Nhập "2-vi" (Tiếng Việt) (Đầy đủ các lệnh và thêm debian-12), Nhập "3-vi" (Tiếng Việt) (Đầy đủ các lệnh và thêm Alpine và Fedora,..) "
 read pythonnumber
