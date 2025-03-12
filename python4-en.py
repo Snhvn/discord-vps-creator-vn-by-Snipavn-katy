@@ -297,9 +297,9 @@ async def deploy(interaction: discord.Interaction):
     await create_server_task_debian(interaction)
 
  
- @bot.tree.command(name="deploy-alpine", description="Creates a new server with Alpine linux.")
- async def deploy(interaction: discord.Interaction):
-    await create_server_task_alpine(interaction)
+# @bot.tree.command(name="deploy-alpine", description="Creates a new server with Alpine linux.")
+# async def deploy(interaction: discord.Interaction):
+#    await create_server_task_alpine(interaction)
 
 @bot.tree.command(name="remove", description="Removes a server")
 async def remove(interaction: discord.Interaction, ssh_command: str):
