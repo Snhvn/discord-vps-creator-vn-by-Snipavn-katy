@@ -6,4 +6,5 @@ echo "Wait 3s to install/ Chờ 3s để cài"
 sleep 3
 clear
 sudo apt install docker.io
+sudo service docker start
 echo "Đã Xong tải docker"
