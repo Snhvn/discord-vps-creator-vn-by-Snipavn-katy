@@ -17,5 +17,5 @@ echo "Writing UDockerfile-Openwrt.../Viết Dockerfile-Openwrt"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-openwrt.sh && chmod +x install-dockerfile-openwrt.sh && sudo ./install-dockerfile-openwrt.sh
 echo Made successfully - Building UDocker image.
 echo "Building UDocker Image/Xây dựng hình ảnh UDocker"
-sudo -u discordvps udocker setup -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo -u discordvps udocker setup -t debian-with-tmate -f Dockerfile2 . && sudo -u discordvps udocker setup -t alpine-with-tmate -f Dockerfile3 . && sudo -u discordvps udocker setup -t fedora-with-tmate -f Dockerfile4 . #&& sudo -u $newuser udocker setup -t openwrt-with-tmate -f Dockerfile5 .
+sudo -u discordvps udocker setup ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo -u discordvps udocker setup -t debian-with-tmate -f Dockerfile2 . && sudo -u discordvps udocker setup -t alpine-with-tmate -f Dockerfile3 . && sudo -u discordvps udocker setup -t fedora-with-tmate -f Dockerfile4 . #&& sudo -u $newuser udocker setup -t openwrt-with-tmate -f Dockerfile5 .
 echo Built successfully/Xây dựng thành công
