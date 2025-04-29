@@ -260,7 +260,7 @@ async def create_server_task(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--hostname=servertipacvn", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -296,7 +296,7 @@ async def create_server_task_debian(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--hostname=servertipacvn", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -331,7 +331,7 @@ async def create_server_task_alpine(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--hostname=servertipacvn", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
@@ -367,7 +367,7 @@ async def create_server_task_fedora(interaction):
     
     try:
         container_id = subprocess.check_output([
-            "docker", "run", "-itd", "--privileged", "--cap-add=ALL", image
+            "docker", "run", "-itd", "--hostname=servertipacvn", "--privileged", "--cap-add=ALL", image
         ]).strip().decode('utf-8')
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error creating Docker container: {e}", color=0xff0000))
