@@ -5,7 +5,6 @@ RUN apt update
 RUN apt install qemu-utils qemu-system-x86 -y
 RUN apt install -y curl wget sudo systemctl neofetch
 RUN qemu-img create -f raw 2012r2.img
-RUN wget && sh startwin.sh
-RUN 
+RUN wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/dockerfile/startwin.sh && sh startwin.sh
 
 EOF
