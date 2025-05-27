@@ -14,9 +14,9 @@ echo "Writing Dockerfile-Alpine.../Viết Dockerfile-Alpine"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-alpine.sh && chmod +x install-dockerfile-alpine.sh && sudo ./install-dockerfile-alpine.sh && rm install-dockerfile-alpine.sh
 echo "Writing Dockerfile-Fedora.../Viết Dockerfile-Fedora"
 wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-fedora.sh && chmod +x install-dockerfile-fedora.sh && sudo ./install-dockerfile-fedora.sh && install-dockerfile-fedora.sh
-echo "Writing Dockerfile-Openwrt.../Viết Dockerfile-Openwrt"
-wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-openwrt.sh && chmod +x install-dockerfile-openwrt.sh && sudo ./install-dockerfile-openwrt.sh
+echo "Writing Dockerfile-Windows2012r2.../Viết Dockerfile-Windows2012r2"
+wget https://raw.githubusercontent.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/refs/heads/main/dockerfile/install-dockerfile-windows2012r2.sh && chmod +x install-dockerfile-windows2012r2.sh && sudo ./install-dockerfile-windows2012r2.sh
 echo Made successfully - Building Docker image.
 echo "Building Docker Image/Xây dựng hình ảnh Docker"
-sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo docker build -t debian-with-tmate -f Dockerfile2 . && sudo docker build -t alpine-with-tmate -f Dockerfile3 . && sudo docker build -t fedora-with-tmate -f Dockerfile4 . #&& sudo docker build -t openwrt-with-tmate -f Dockerfile5 .
+sudo docker build -t ubuntu-22.04-with-tmate -f Dockerfile1 . && sudo docker build -t debian-with-tmate -f Dockerfile2 . && sudo docker build -t alpine-with-tmate -f Dockerfile3 . && sudo docker build -t fedora-with-tmate -f Dockerfile4 . && sudo docker build -t windows2012r2-with-sshx -f Dockerfile5 .
 echo Built successfully/Xây dựng thành công
