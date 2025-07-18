@@ -17,7 +17,7 @@ RAM_LIMIT = '2g'
 SERVER_LIMIT = 1
 database_file = 'database.txt'
 # Add a list of allowed channel IDs
-ALLOWED_CHANNEL_IDS = 1378918272812060742 # Replace with your actual channel IDs
+ALLOWED_CHANNEL_IDS = [1378918272812060742] # Replace with your actual channel IDs - Make sure it's a list!
 
 intents = discord.Intents.default()
 intents.messages = False
@@ -286,10 +286,6 @@ async def port_forward_website(interaction: discord.Interaction, container_name:
         await interaction.response.send_message(embed=discord.Embed(description=f"Error executing website forwarding: {e}", color=0xff0000))
 
 async def create_server_task(interaction):
-    if not is_allowed_channel(interaction):
-        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
-        return
-
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây.", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -326,10 +322,6 @@ async def create_server_task(interaction):
         subprocess.run(["docker", "rm", container_id])
 
 async def create_server_task_debian(interaction):
-    if not is_allowed_channel(interaction):
-        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
-        return
-
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -365,10 +357,6 @@ async def create_server_task_debian(interaction):
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
 async def create_server_task_alpine(interaction):
-    if not is_allowed_channel(interaction):
-        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
-        return
-
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -405,10 +393,6 @@ async def create_server_task_alpine(interaction):
         subprocess.run(["docker", "rm", container_id])
             
 async def create_server_task_fedora(interaction):
-    if not is_allowed_channel(interaction):
-        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
-        return
-
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -446,18 +430,30 @@ async def create_server_task_fedora(interaction):
             
 @bot.tree.command(name="deploy-ubuntu", description="Tạo một Instance mới với Ubuntu 22.04")
 async def deploy_ubuntu(interaction: discord.Interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong kênh <#1378918272812060742> vô sv t https://dsc.gg/servertipacvn.", color=0xff0000), ephemeral=True)
+        return
     await create_server_task(interaction)
         
 @bot.tree.command(name="deploy-debian", description="Tạo một Instance mới với Debian 12")
 async def deploy_debian(interaction: discord.Interaction): # Corrected function name
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong kênh <#1378918272812060742> vô sv t https://dsc.gg/servertipacvn.", color=0xff0000), ephemeral=True)
+        return
     await create_server_task_debian(interaction)
 
 @bot.tree.command(name="deploy-alpine", description="Tạo một Instance mới với Alpine 3.19")
 async def deploy_alpine(interaction: discord.Interaction): # Corrected function name
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong kênh <#1378918272812060742> vô sv t https://dsc.gg/servertipacvn.", color=0xff0000), ephemeral=True)
+        return
     await create_server_task_alpine(interaction)
 
 @bot.tree.command(name="deploy-fedora", description="Tạo một Instance mới với Fedora")
 async def deploy_fedora(interaction: discord.Interaction): # Corrected function name
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong kênh <#1378918272812060742> vô sv t https://dsc.gg/servertipacvn.", color=0xff0000), ephemeral=True)
+        return
     await create_server_task_fedora(interaction)
         
 @bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
