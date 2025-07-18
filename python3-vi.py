@@ -16,6 +16,9 @@ TOKEN = '' # TOKEN HERE
 RAM_LIMIT = '2g'
 SERVER_LIMIT = 1
 database_file = 'database.txt'
+# Add a list of allowed channel IDs
+ALLOWED_CHANNEL_IDS = 1378918272812060742 # Replace with your actual channel IDs
+
 intents = discord.Intents.default()
 intents.messages = False
 intents.message_content = False
@@ -74,10 +77,15 @@ def get_user_servers(user):
 def count_user_servers(user):
     return len(get_user_servers(user))
 
-def get_container_id_from_database(user):
-    servers = get_user_servers(user)
-    if servers:
-        return servers[0].split('|')[1]
+def get_container_id_from_database(user, container_name=None):
+    if not os.path.exists(database_file):
+        return None
+    with open(database_file, 'r') as f:
+        for line in f:
+            parts = line.split('|')
+            if len(parts) >= 2 and parts[0] == user:
+                if container_name is None or container_name in parts[1]:
+                    return parts[1]
     return None
 
 @bot.event
@@ -101,7 +109,15 @@ async def change_status():
     except Exception as e:
         print(f"Failed to update status: {e}")
 
+# Helper function to check if the command is used in an allowed channel
+def is_allowed_channel(interaction: discord.Interaction):
+    return interaction.channel_id in ALLOWED_CHANNEL_IDS
+
 async def regen_ssh_command(interaction: discord.Interaction, container_name: str):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     container_id = get_container_id_from_database(user, container_name)
 
@@ -123,6 +139,10 @@ async def regen_ssh_command(interaction: discord.Interaction, container_name: st
         await interaction.response.send_message(embed=discord.Embed(description="<:hetcuunoi:1125772819381366824>Không thể tạo phiên SSH mới.", color=0xff0000))
 
 async def start_server(interaction: discord.Interaction, container_name: str):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     container_id = get_container_id_from_database(user, container_name)
 
@@ -144,6 +164,10 @@ async def start_server(interaction: discord.Interaction, container_name: str):
         await interaction.response.send_message(embed=discord.Embed(description=f"Error starting instance: {e}", color=0xff0000))
 
 async def stop_server(interaction: discord.Interaction, container_name: str):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     container_id = get_container_id_from_database(user, container_name)
 
@@ -158,6 +182,10 @@ async def stop_server(interaction: discord.Interaction, container_name: str):
         await interaction.response.send_message(embed=discord.Embed(description=f"Error stopping instance: {e}", color=0xff0000))
 
 async def restart_server(interaction: discord.Interaction, container_name: str):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     container_id = get_container_id_from_database(user, container_name)
 
@@ -211,6 +239,10 @@ async def capture_output(process, keyword):
 @bot.tree.command(name="port-add", description="Thêm quy tắc chuyển tiếp cổng")
 @app_commands.describe(container_name="Tên container của bạn", container_port="Cổng trong container")
 async def port_add(interaction: discord.Interaction, container_name: str, container_port: int):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     await interaction.response.send_message(embed=discord.Embed(description="Đang thiết lập chuyển tiếp cổng. Việc này có thể mất một lúc...", color=0x00ff00))
 
     public_port = generate_random_port()
@@ -235,6 +267,10 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
 @bot.tree.command(name="port-http", description="Chuyển tiếp lưu lượng HTTP đến vùng chứa của bạn")
 @app_commands.describe(container_name="Tên container của bạn", container_ngroktoken="Nhập ngrok token của bạn(Tạo ngroktoken:ngrok.com)", container_port="Cổng bên trong container để chuyển tiếp")
 async def port_forward_website(interaction: discord.Interaction, container_name: str, container_ngroktoken: str, container_port: int):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     try:
         exec_cmd = await asyncio.create_subprocess_exec(
             "docker", "exec", container_name, "ssh", "-o StrictHostKeyChecking=no", "-R", f"80:localhost:{container_port}", "serveo.net",
@@ -250,6 +286,10 @@ async def port_forward_website(interaction: discord.Interaction, container_name:
         await interaction.response.send_message(embed=discord.Embed(description=f"Error executing website forwarding: {e}", color=0xff0000))
 
 async def create_server_task(interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây.", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -286,6 +326,10 @@ async def create_server_task(interaction):
         subprocess.run(["docker", "rm", container_id])
 
 async def create_server_task_debian(interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -321,6 +365,10 @@ async def create_server_task_debian(interaction):
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
 async def create_server_task_alpine(interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -357,6 +405,10 @@ async def create_server_task_alpine(interaction):
         subprocess.run(["docker", "rm", container_id])
             
 async def create_server_task_fedora(interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     await interaction.response.send_message(embed=discord.Embed(description="Tạo Instance, mất vài giây", color=0x00ff00))
     user = str(interaction.user)
     if count_user_servers(user) >= SERVER_LIMIT:
@@ -397,15 +449,15 @@ async def deploy_ubuntu(interaction: discord.Interaction):
     await create_server_task(interaction)
         
 @bot.tree.command(name="deploy-debian", description="Tạo một Instance mới với Debian 12")
-async def deploy_ubuntu(interaction: discord.Interaction):
+async def deploy_debian(interaction: discord.Interaction): # Corrected function name
     await create_server_task_debian(interaction)
 
 @bot.tree.command(name="deploy-alpine", description="Tạo một Instance mới với Alpine 3.19")
-async def deploy_ubuntu(interaction: discord.Interaction):
+async def deploy_alpine(interaction: discord.Interaction): # Corrected function name
     await create_server_task_alpine(interaction)
 
 @bot.tree.command(name="deploy-fedora", description="Tạo một Instance mới với Fedora")
-async def deploy_ubuntu(interaction: discord.Interaction):
+async def deploy_fedora(interaction: discord.Interaction): # Corrected function name
     await create_server_task_fedora(interaction)
         
 @bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
@@ -430,6 +482,10 @@ async def restart(interaction: discord.Interaction, container_name: str):
 
 @bot.tree.command(name="ping", description="Kiểm tra ping của bot.")
 async def ping(interaction: discord.Interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     latency = round(bot.latency * 1000)
     embed = discord.Embed(
         title="🔴 Ping của bot!",
@@ -440,6 +496,10 @@ async def ping(interaction: discord.Interaction):
 
 @bot.tree.command(name="list", description="Liệt kê tất cả các Instances của bạn")
 async def list_servers(interaction: discord.Interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     servers = get_user_servers(user)
     if servers:
@@ -454,6 +514,10 @@ async def list_servers(interaction: discord.Interaction):
 @bot.tree.command(name="remove", description="Xóa một Instances")
 @app_commands.describe(container_name="Tên/ssh-command của Instances của bạn")
 async def remove_server(interaction: discord.Interaction, container_name: str):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     user = str(interaction.user)
     container_id = get_container_id_from_database(user, container_name)
 
@@ -473,6 +537,10 @@ async def remove_server(interaction: discord.Interaction, container_name: str):
 
 @bot.tree.command(name="help", description="Hiển thị thông báo trợ giúp")
 async def help_command(interaction: discord.Interaction):
+    if not is_allowed_channel(interaction):
+        await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
+        return
+
     embed = discord.Embed(title="<:info:1147509120149246062>Information<:info:1147509120149246062>", color=0x00ff00)
     embed.add_field(name="<:ubuntu:1344300653324927046>|/deploy-ubuntu", value="Tạo một Instance mới với Ubuntu 22.04.", inline=False)
     embed.add_field(name="<:debian:1344300752411164682>|/deploy-debian", value="Tạo một Instance mới với Debian 12.", inline=False)
