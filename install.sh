@@ -23,14 +23,10 @@ echo "Installing python3-pip and docker/Cài đặt python3-pip và docker."
 apt install -y sudo wget
 sudo apt update
 sudo apt install -y python3-pip
-echo "Installing Docker (Ubuntu): Enter "docker" | Udocker (Ubuntu Clone): Enter "udocker"/Cài đặt Docker (Ubuntu): Nhập "docker" | Udocker (Bản sao Ubuntu): Nhập "udocker"."
-read dockerorudocker
-wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-$dockerorudocker.sh && chmod +x install-$dockerorudocker.sh && sudo ./install-$dockerorudocker.sh && rm install-$dockerorudocker.sh
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-docker.sh && chmod +x install-docker.sh && sudo ./install-docker.sh && rm install-docker.sh
 echo Installed successfully/Đã cài đặt thành công
-echo "Enter "docker": to install dockerfile | Enter "udocker": to install udockerfile"
-read dockerfileorudockerfile
 echo "Writing Dockerfile.../Viết Dockerfile..."
-wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-$dockerfileorudockerfile.sh && chmod +x install-dockerfile-$dockerfileorudockerfile.sh && sudo ./install-dockerfile-$dockerfileorudockerfile.sh && rm install-dockerfile-$dockerfileorudockerfile.sh
+wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-docker.sh && chmod +x install-dockerfile-docker.sh && sudo ./install-dockerfile-docker.sh && rm install-dockerfile-docker.sh
 echo "Downloading main.py from the GitHub repository.../Đang tải xuống main.py từ kho lưu trữ GitHub/Snhvn..."
 echo -e "Enter "1-en" (English) (Ubuntu-22.04) or Enter "2-en" (English) (Full commands and add debian 12)/Nhập "1-vi" (Tiếng Việt) (Ubuntu-22.04) hoặc Nhập "2-vi" (Tiếng Việt) (Đầy đủ các lệnh và thêm debian-12), Nhập "3-vi" (Tiếng Việt) (Đầy đủ các lệnh và thêm Alpine và Fedora,..) "
 read pythonnumber
