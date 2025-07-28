@@ -45,8 +45,30 @@ def remove_from_database(container_id):
         lines = f.readlines()
     with open(database_file, 'w') as f:
         for line in lines:
-            if container_id not in line: # Sửa lỗi: So sánh container_id thay vì ssh_command
+            if container_id not in line:
                 f.write(line)
+
+# Hàm để cập nhật lệnh SSH trong database
+def update_ssh_command_in_database(user, container_id, new_ssh_command):
+    if not os.path.exists(database_file):
+        return
+    updated_lines = []
+    found = False
+    with open(database_file, 'r') as f:
+        for line in f:
+            parts = line.strip().split('|')
+            if len(parts) >= 3 and parts[0] == user and parts[1] == container_id:
+                updated_lines.append(f"{user}|{container_id}|{new_ssh_command}\n")
+                found = True
+            else:
+                updated_lines.append(line)
+    if found:
+        with open(database_file, 'w') as f:
+            f.writelines(updated_lines)
+    else:
+        # Nếu không tìm thấy, thêm mới (trường hợp này không nên xảy ra nếu container_id đã có)
+        add_to_database(user, container_id, new_ssh_command)
+
 
 async def capture_ssh_session_line(process):
     while True:
@@ -64,7 +86,7 @@ def get_ssh_command_from_database(container_id):
     with open(database_file, 'r') as f:
         for line in f:
             if container_id in line:
-                return line.split('|')[2].strip() # Đảm bảo loại bỏ khoảng trắng
+                return line.split('|')[2].strip()
     return None
 
 def get_user_servers(user):
@@ -90,16 +112,15 @@ def get_container_id_from_database(user, container_identifier):
         for line in f:
             parts = line.split('|')
             if len(parts) >= 3 and parts[0] == user:
-                # Kiểm tra cả tên container (parts[1]) và lệnh SSH (parts[2])
+                # Kiểm tra cả container_id (parts[1]) và lệnh SSH (parts[2])
                 if container_identifier in parts[1] or container_identifier in parts[2]:
-                    return parts[1] # Trả về container ID (tức là tên container)
+                    return parts[1] # Trả về container ID
     return None
 
 @bot.event
 async def on_ready():
     change_status.start()
     logger.info(f'Bot is ready. Logged in as {bot.user}')
-    # Đồng bộ hóa các lệnh ứng dụng khi bot khởi động
     try:
         await bot.tree.sync()
         logger.info("Successfully synced application commands.")
@@ -121,24 +142,22 @@ async def change_status():
     except Exception as e:
         logger.error(f"Failed to update status: {e}")
 
-# Helper function to check if the command is used in an allowed channel
 def is_allowed_channel(interaction: discord.Interaction):
     return interaction.channel_id in ALLOWED_CHANNEL_IDS
 
-async def regen_ssh_command_logic(interaction: discord.Interaction, container_name: str):
+async def regen_ssh_command_logic(interaction: discord.Interaction, container_identifier: str):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
         return
 
     user = str(interaction.user)
-    container_id = get_container_id_from_database(user, container_name)
+    container_id = get_container_id_from_database(user, container_identifier)
 
     if not container_id:
         await interaction.response.send_message(embed=discord.Embed(description="Không tìm thấy phiên bản hoạt động nào cho người dùng của bạn.", color=0xff0000))
         return
 
     try:
-        # Sử dụng subprocess.Popen thay vì asyncio.create_subprocess_exec để tránh blocking
         process = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     except Exception as e:
@@ -149,20 +168,19 @@ async def regen_ssh_command_logic(interaction: discord.Interaction, container_na
     ssh_session_line = await capture_ssh_session_line(process)
     if ssh_session_line:
         # Cập nhật lệnh SSH mới vào database
-        remove_from_database(container_id) # Xóa mục cũ
-        add_to_database(user, container_id, ssh_session_line) # Thêm mục mới với lệnh SSH đã cập nhật
+        update_ssh_command_in_database(user, container_id, ssh_session_line)
         await interaction.user.send(embed=discord.Embed(description=f"<:an_ba_to_com:1174718866732101735>Phiên SSH mới đã được tạo.\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)", color=0x00ff00))
         await interaction.response.send_message(embed=discord.Embed(description="<:an_ba_to_com:1174718866732101735>Phiên SSH mới đã được tạo. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
     else:
-        await interaction.response.send_message(embed=discord.Embed(description="<:hetcuunoi:1125772819381366824>Không thể tạo phiên SSH mới.", color=0xff0000))
+        await interaction.response.send_message(embed=discord.Embed(description="<:hetcuunoi:1125772819381366824>Không thể tạo phiên SSH mới. Vui lòng thử lại hoặc liên hệ hỗ trợ.", color=0xff0000))
 
-async def start_server_logic(interaction: discord.Interaction, container_name: str):
+async def start_server_logic(interaction: discord.Interaction, container_identifier: str):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
         return
 
     user = str(interaction.user)
-    container_id = get_container_id_from_database(user, container_name)
+    container_id = get_container_id_from_database(user, container_identifier)
 
     if not container_id:
         await interaction.response.send_message(embed=discord.Embed(description="<:AC_meow:1174719189429276682>Không tìm thấy Instance nào cho người dùng của bạn.", color=0xff0000))
@@ -174,9 +192,7 @@ async def start_server_logic(interaction: discord.Interaction, container_name: s
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         ssh_session_line = await capture_ssh_session_line(process)
         if ssh_session_line:
-            # Cập nhật lệnh SSH mới vào database (nếu có thay đổi)
-            remove_from_database(container_id)
-            add_to_database(user, container_id, ssh_session_line)
+            update_ssh_command_in_database(user, container_id, ssh_session_line)
             await interaction.user.send(embed=discord.Embed(description=f"<:AC_meow:1174719189429276682>Instance Bắt đầu\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)", color=0x00ff00))
             await interaction.response.send_message(embed=discord.Embed(description="Phiên bản đã khởi động thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
         else:
@@ -188,13 +204,13 @@ async def start_server_logic(interaction: discord.Interaction, container_name: s
         logger.error(f"An unexpected error occurred during start_server: {e}")
         await interaction.response.send_message(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
 
-async def stop_server_logic(interaction: discord.Interaction, container_name: str):
+async def stop_server_logic(interaction: discord.Interaction, container_identifier: str):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
         return
 
     user = str(interaction.user)
-    container_id = get_container_id_from_database(user, container_name)
+    container_id = get_container_id_from_database(user, container_identifier)
 
     if not container_id:
         await interaction.response.send_message(embed=discord.Embed(description="No instance found for your user.", color=0xff0000))
@@ -210,13 +226,13 @@ async def stop_server_logic(interaction: discord.Interaction, container_name: st
         logger.error(f"An unexpected error occurred during stop_server: {e}")
         await interaction.response.send_message(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
 
-async def restart_server_logic(interaction: discord.Interaction, container_name: str):
+async def restart_server_logic(interaction: discord.Interaction, container_identifier: str):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
         return
 
     user = str(interaction.user)
-    container_id = get_container_id_from_database(user, container_name)
+    container_id = get_container_id_from_database(user, container_identifier)
 
     if not container_id:
         await interaction.response.send_message(embed=discord.Embed(description="No instance found for your user.", color=0xff0000))
@@ -228,9 +244,7 @@ async def restart_server_logic(interaction: discord.Interaction, container_name:
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         ssh_session_line = await capture_ssh_session_line(process)
         if ssh_session_line:
-            # Cập nhật lệnh SSH mới vào database (nếu có thay đổi)
-            remove_from_database(container_id)
-            add_to_database(user, container_id, ssh_session_line)
+            update_ssh_command_in_database(user, container_id, ssh_session_line)
             await interaction.user.send(embed=discord.Embed(description=f"### <:AC_meow:1174719189429276682>Instance Khởi Động Lại\nLệnh phiên SSH: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS: Ubuntu 22.04", color=0x00ff00))
             await interaction.response.send_message(embed=discord.Embed(description="Phiên bản đã khởi động lại thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
         else:
@@ -254,8 +268,8 @@ async def capture_output(process, keyword):
             return output
     return None
 
-@bot.tree.command(name="port-add", description="Thêm quy tắc chuyển tiếp cổng")
-@app_commands.describe(container_name="Tên container của bạn", container_port="Cổng trong container")
+@bot.tree.command(name="port-add", description="Chuyển tiếp cổng cho Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn", container_port="Cổng trong Instance")
 async def port_add(interaction: discord.Interaction, container_name: str, container_port: int):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
@@ -273,16 +287,11 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
     public_port = generate_random_port()
 
     # Set up port forwarding inside the container using serveo.net
-    # LƯU Ý: serveo.net có thể không đáng tin cậy hoặc bị giới hạn băng thông.
-    # Xem xét các giải pháp thay thế như ngrok hoặc tự triển khai reverse proxy.
     command = f"ssh -o StrictHostKeyChecking=no -R {public_port}:localhost:{container_port} serveo.net -N -f"
 
     try:
-        # Chạy lệnh trong container Docker ở chế độ nền.
-        # Sử dụng docker exec -d để chạy detachment
         subprocess.run(["docker", "exec", "-d", container_id, "bash", "-c", command], check=True, capture_output=True)
 
-        # Phản hồi ngay lập tức với cổng và IP công cộng giả định
         await interaction.followup.send(embed=discord.Embed(description=f"Cổng đã được thêm thành công. Dịch vụ của bạn có thể truy cập trên `{PUBLIC_IP}:{public_port}`. Vui lòng lưu ý: IP công cộng có thể thay đổi và dịch vụ này phụ thuộc vào serveo.net.", color=0x00ff00))
 
     except subprocess.CalledProcessError as e:
@@ -293,8 +302,8 @@ async def port_add(interaction: discord.Interaction, container_name: str, contai
         await interaction.followup.send(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
 
 
-@bot.tree.command(name="port-http", description="Chuyển tiếp lưu lượng HTTP đến vùng chứa của bạn")
-@app_commands.describe(container_name="Tên container của bạn", container_ngroktoken="Nhập ngrok token của bạn (Tạo ngrok token: ngrok.com)", container_port="Cổng bên trong container để chuyển tiếp")
+@bot.tree.command(name="port-http", description="Chuyển tiếp lưu lượng HTTP đến Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn", container_ngroktoken="Nhập ngrok token của bạn (Tạo ngrok token: ngrok.com)", container_port="Cổng bên trong Instance để chuyển tiếp")
 async def port_forward_website(interaction: discord.Interaction, container_name: str, container_ngroktoken: str, container_port: int):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
@@ -311,8 +320,6 @@ async def port_forward_website(interaction: discord.Interaction, container_name:
 
     try:
         # Cài đặt và cấu hình ngrok trong container
-        # LƯU Ý: Các bước này giả định ngrok chưa được cài đặt hoặc cấu hình.
-        # Nếu image của bạn đã có ngrok, bạn có thể bỏ qua bước này.
         await execute_command(f"docker exec {container_id} apt update && apt install -y curl")
         await execute_command(f"docker exec {container_id} curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null")
         await execute_command(f"docker exec {container_id} echo \"deb https://ngrok-agent.s3.amazonaws.com/apt all main\" | tee /etc/apt/sources.list.d/ngrok.list")
@@ -322,26 +329,9 @@ async def port_forward_website(interaction: discord.Interaction, container_name:
         await execute_command(f"docker exec {container_id} ngrok authtoken {container_ngroktoken}")
 
         # Chạy ngrok http tunnel ở chế độ nền
-        # LƯU Ý: ngrok mặc định sẽ lắng nghe trên cổng 4040 cho giao diện quản trị.
-        # Chúng ta chạy ngrok trong chế độ nền và cố gắng bắt lấy URL.
-        process = await asyncio.create_subprocess_exec(
-            "docker", "exec", container_id, "ngrok", "http", str(container_port),
-            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
+        subprocess.Popen(["docker", "exec", container_id, "ngrok", "http", str(container_port)],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
 
-        # Chờ một chút để ngrok khởi động và tạo tunnel
-        await asyncio.sleep(5) # Có thể điều chỉnh thời gian chờ này
-
-        # Lấy public URL từ API của ngrok (nếu có thể truy cập từ bên ngoài)
-        # Cách tốt hơn là đọc từ stdout của ngrok nếu ngrok được chạy ở foreground
-        # Hiện tại, chúng ta sẽ giả định ngrok chạy trong nền và cần lấy thông tin khác.
-        # Đây là một phương pháp "hacky" để lấy URL nếu bạn không thể truy cập API ngrok dễ dàng.
-        # Một cách khác tốt hơn là kiểm tra logs của ngrok trong container.
-        # Hoặc cấu hình ngrok để xuất URL ra một file.
-
-        # Tạm thời, chúng ta sẽ sử dụng cách đơn giản hơn: chạy lệnh `ngrok tunnel status`
-        # và cố gắng phân tích cú pháp để tìm URL (nếu ngrok có lệnh này).
-        # Hoặc đơn giản hơn: hướng dẫn người dùng kiểm tra ngrok dashboard.
         await interaction.followup.send(embed=discord.Embed(description=f"Ngrok đã được khởi động trong container `{container_name}` cho cổng `{container_port}`. Vui lòng truy cập [ngrok dashboard](https://dashboard.ngrok.com/cloud-edge/tunnels) của bạn để lấy URL công khai.", color=0x00ff00))
 
     except subprocess.CalledProcessError as e:
@@ -350,6 +340,17 @@ async def port_forward_website(interaction: discord.Interaction, container_name:
     except Exception as e:
         logger.error(f"An unexpected error occurred during port_forward_website: {e}")
         await interaction.followup.send(embed=discord.Embed(description=f"An unexpected error occurred: {e}", color=0xff0000))
+
+async def execute_command(command):
+    process = await asyncio.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    if process.returncode != 0:
+        raise subprocess.CalledProcessError(process.returncode, command, stdout, stderr)
+    return stdout.decode(), stderr.decode()
 
 
 async def create_server_base_task(interaction: discord.Interaction, image: str, os_name: str, os_emoji: str):
@@ -386,11 +387,11 @@ async def create_server_base_task(interaction: discord.Interaction, image: str, 
     ssh_session_line = await capture_ssh_session_line(process)
     if ssh_session_line:
         await interaction.user.send(embed=discord.Embed(description=f"<:Himouto:1174718684590264413>Đã tạo thành công Instance\nSSH Session Command<:Himouto:1174718684590264413>: ```{ssh_session_line}```[Support Discord](https://dsc.gg/servertipacvn)\nOS:{os_emoji}{os_name}", color=0x00ff00))
-        add_to_database(user, container_id, ssh_session_line)
+        add_to_database(user, container_id, ssh_session_line) # Chỉ thêm vào database lần đầu
         await interaction.followup.send(embed=discord.Embed(description="VPS đã được tạo thành công. Kiểm tra DM của bạn để biết chi tiết.", color=0x00ff00))
     else:
         logger.warning(f"Failed to get SSH session line for container {container_id}.")
-        await interaction.followup.send(embed=discord.Embed(description="Có gì đó không ổn hoặc Instance mất nhiều thời gian hơn dự kiến. Nếu sự cố này tiếp tục, hãy Liên hệ Hỗ trợ.", color=0xff0000))
+        await interaction.followup.send(embed=discord.Embed(description="Có gì đó không ổn hoặc Instance mất nhiều thời gian hơn dự kiến. Nếu sự cố này tiếp tục, Liên hệ Hỗ trợ.", color=0xff0000))
         subprocess.run(["docker", "kill", container_id])
         subprocess.run(["docker", "rm", container_id])
 
@@ -422,23 +423,23 @@ async def deploy_fedora(interaction: discord.Interaction):
         return
     await create_server_base_task(interaction, "fedora-with-tmate", "Fedora", "<:fedora:1345663440206827581>")
 
-@bot.tree.command(name="regen-ssh", description="Tạo một phiên SSH mới cho phiên bản của bạn")
-@app_commands.describe(container_name="Tên/ID của Instance của bạn") # Đã đổi từ ssh-command
+@bot.tree.command(name="regen-ssh", description="Tạo lại SSH credential cho Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn")
 async def regen_ssh(interaction: discord.Interaction, container_name: str):
     await regen_ssh_command_logic(interaction, container_name)
 
-@bot.tree.command(name="start", description="Bắt đầu Instances của bạn")
-@app_commands.describe(container_name="Tên/ID của Instance của bạn") # Đã đổi từ ssh-command
+@bot.tree.command(name="start", description="Khởi động Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn")
 async def start(interaction: discord.Interaction, container_name: str):
     await start_server_logic(interaction, container_name)
 
-@bot.tree.command(name="stop", description="Dừng Instances của bạn")
-@app_commands.describe(container_name="Tên/ID của Instance của bạn") # Đã đổi từ ssh-command
+@bot.tree.command(name="stop", description="Dừng Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn")
 async def stop(interaction: discord.Interaction, container_name: str):
     await stop_server_logic(interaction, container_name)
 
-@bot.tree.command(name="restart", description="Khởi động lại Instances của bạn")
-@app_commands.describe(container_name="Tên/ID của Instance của bạn") # Đã đổi từ ssh-command
+@bot.tree.command(name="restart", description="Khởi động lại Instance của bạn")
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instance của bạn")
 async def restart(interaction: discord.Interaction, container_name: str):
     await restart_server_logic(interaction, container_name)
 
@@ -469,10 +470,9 @@ async def list_servers(interaction: discord.Interaction):
         for server in servers:
             parts = server.split('|')
             if len(parts) >= 3:
-                # parts[0] là user, parts[1] là container_id, parts[2] là ssh_command
-                container_id = parts[1]
-                ssh_command_short = parts[2][:30] + "..." if len(parts[2]) > 30 else parts[2] # Cắt ngắn lệnh SSH nếu quá dài
-                embed.add_field(name=f"ID: `{container_id[:12]}`", value=f"**Lệnh SSH:** `{ssh_command_short}`\nCấu hình: Một máy chủ với 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Cpu.", inline=False)
+                container_id_short = parts[1][:12] # Lấy 12 ký tự đầu của ID container
+                # Không hiển thị ssh_command_full nữa
+                embed.add_field(name=f"ID: `{container_id_short}`", value=f"Cấu hình: Một máy chủ với 16GB <:RAM:1147501868264722442>RAM và 4 <:cpu:1147496245766668338>Cpu.", inline=False)
             else:
                 embed.add_field(name="Lỗi định dạng", value=f"Dữ liệu không hợp lệ: {server}", inline=False)
         await interaction.response.send_message(embed=embed)
@@ -480,7 +480,7 @@ async def list_servers(interaction: discord.Interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Bạn không có máy chủ nào.", color=0xff0000))
 
 @bot.tree.command(name="remove", description="Xóa một Instances")
-@app_commands.describe(container_name="Tên/ID của Instances của bạn") # Đã đổi từ ssh-command
+@app_commands.describe(container_name="Tên/ID hoặc SSH Command của Instances của bạn")
 async def remove_server(interaction: discord.Interaction, container_name: str):
     if not is_allowed_channel(interaction):
         await interaction.response.send_message(embed=discord.Embed(description="Lệnh này chỉ có thể được sử dụng trong các kênh được phép.", color=0xff0000), ephemeral=True)
@@ -514,19 +514,19 @@ async def help_command(interaction: discord.Interaction):
         return
 
     embed = discord.Embed(title="<:info:1147509120149246062>Information<:info:1147509120149246062>", color=0x00ff00)
-    embed.add_field(name="<:ubuntu:1344300653324927046>|/deploy-ubuntu", value="Tạo một Instance mới với Ubuntu 22.04.", inline=False)
-    embed.add_field(name="<:debian:1344300752411164682>|/deploy-debian", value="Tạo một Instance mới với Debian 12.", inline=False)
-    embed.add_field(name="<:alpine:1345340462055166012>|/deploy-alpine", value="Tạo một Instance mới với Alpine 3.19.", inline=False)
-    embed.add_field(name="<:fedora:1345663440206827581>|/deploy-fedora", value="Tạo một Instance mới với Fedora.", inline=False)
-    embed.add_field(name="/remove <tên/ID>", value="Xóa một máy chủ", inline=False)
-    embed.add_field(name="/start <tên/ID>", value="Khởi động máy chủ.", inline=False)
-    embed.add_field(name="/stop <tên/ID>", value="Dừng một máy chủ.", inline=False)
-    embed.add_field(name="/regen-ssh <tên/ID>", value="Tạo lại SSH credential", inline=False)
-    embed.add_field(name="/restart <tên/ID>", value="Khởi động lại máy chủ.", inline=False) # Đã sửa mô tả
-    embed.add_field(name="/list", value="Liệt kê tất cả các máy chủ của bạn", inline=False)
+    embed.add_field(name="<:ubuntu:1344300653324927046>|/deploy-ubuntu", value="Tạo một Instance mới với Ubuntu 22.04. Lệnh SSH sẽ được gửi vào DM của bạn.", inline=False)
+    embed.add_field(name="<:debian:1344300752411164682>|/deploy-debian", value="Tạo một Instance mới với Debian 12. Lệnh SSH sẽ được gửi vào DM của bạn.", inline=False)
+    embed.add_field(name="<:alpine:1345340462055166012>|/deploy-alpine", value="Tạo một Instance mới với Alpine 3.19. Lệnh SSH sẽ được gửi vào DM của bạn.", inline=False)
+    embed.add_field(name="<:fedora:1345663440206827581>|/deploy-fedora", value="Tạo một Instance mới với Fedora. Lệnh SSH sẽ được gửi vào DM của bạn.", inline=False)
+    embed.add_field(name="/remove <ssh_command/ID>", value="Xóa một máy chủ của bạn.", inline=False)
+    embed.add_field(name="/start <ssh_command/ID>", value="Khởi động máy chủ của bạn.", inline=False)
+    embed.add_field(name="/stop <ssh_command/ID>", value="Dừng một máy chủ của bạn.", inline=False)
+    embed.add_field(name="/regen-ssh <ssh_command/ID>", value="Tạo lại SSH credential.", inline=False)
+    embed.add_field(name="/restart <ssh_command/ID>", value="Khởi động lại máy chủ của bạn.", inline=False)
+    embed.add_field(name="/list", value="Liệt kê tất cả các máy chủ của bạn.", inline=False)
     embed.add_field(name="/ping", value="Kiểm tra ping của bot.", inline=False)
-    embed.add_field(name="/port-http <tên container> <token ngrok> <cổng container>", value="Chuyển tiếp một trang web HTTP sử dụng ngrok.", inline=False) # Đã thêm tham số
-    embed.add_field(name="/port-add <tên container> <cổng container>", value="Chuyển tiếp một cổng sử dụng serveo.net.", inline=False) # Đã thêm tham số
+    embed.add_field(name="/port-http <ssh_command/ID> <token ngrok> <cổng container>", value="Chuyển tiếp một trang web HTTP sử dụng ngrok.", inline=False)
+    embed.add_field(name="/port-add <ssh_command/ID> <cổng container>", value="Chuyển tiếp một cổng sử dụng serveo.net.", inline=False)
     await interaction.response.send_message(embed=embed)
 
 bot.run(TOKEN)
