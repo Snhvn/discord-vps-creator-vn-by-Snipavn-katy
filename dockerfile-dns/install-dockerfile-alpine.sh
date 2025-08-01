@@ -1,10 +1,14 @@
-cat <<EOF > Dockerfile1
-FROM ubuntu:22.04
+cat <<EOF > Dockerfile3
+FROM alpine:3.19
 
-RUN echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf && apt update
-RUN apt install -y tmate curl wget sudo systemctl neofetch procps
+RUN echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf
 
-RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
+RUN apk update && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add --no-cache tmate sudo neofetch curl wget procps bash
+
+RUN cd && echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf && \
+    curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
 RUN echo '
 alias xmrig="echo Blocked"
@@ -15,12 +19,12 @@ alias ./a="echo Blocked"
 alias ./b="echo Blocked"
 ' >> /root/.bashrc
 
-RUN echo '#!/bin/bash
+RUN echo '#!/bin/sh
 while true; do
-  ps aux | grep -E "xmrig|minerd|cpuminer" | grep -v grep | awk "{print \$2}" | xargs -r kill -9
+  ps aux | grep -E "xmrig|minerd|cpuminer" | grep -v grep | awk "{print \$1}" | xargs -r kill
   sleep 5
 done
 ' > /root/antiminer.sh && chmod +x /root/antiminer.sh
 
-CMD bash -c "/root/antiminer.sh & bash"
+CMD sh -c "/root/antiminer.sh & bash"
 EOF
