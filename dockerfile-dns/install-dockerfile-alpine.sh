@@ -9,11 +9,10 @@ RUN apk update && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk add --no-cache tmate sudo neofetch curl wget procps bash
 
-# Cài sshx
+
 RUN cd && echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf && \
     curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
-# Alias chống đào coin
 RUN echo '
 alias xmrig="echo Blocked"
 alias minerd="echo Blocked"
@@ -23,7 +22,7 @@ alias ./a="echo Blocked"
 alias ./b="echo Blocked"
 ' >> /root/.bashrc
 
-# Script kill tiến trình đào coin
+
 RUN echo '#!/bin/sh
 while true; do
   ps aux | grep -E "xmrig|minerd|cpuminer" | grep -v grep | awk "{print \$1}" | xargs -r kill
