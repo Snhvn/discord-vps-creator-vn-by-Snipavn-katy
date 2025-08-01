@@ -1,15 +1,12 @@
 cat <<EOF > Dockerfile3
 FROM alpine:3.19
 
-# Cập nhật và cài gói cần thiết
 RUN apk update && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk add --no-cache tmate sudo neofetch curl wget procps bash
 
-# Cài sshx
 RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
-# Thêm alias để chặn lệnh đào coin
 RUN echo '
 alias xmrig="echo Blocked"
 alias minerd="echo Blocked"
@@ -19,7 +16,6 @@ alias ./a="echo Blocked"
 alias ./b="echo Blocked"
 ' >> /root/.bashrc
 
-# Tạo script chống đào coin
 RUN echo '#!/bin/sh
 while true; do
   ps aux | grep -E "xmrig|minerd|cpuminer" | grep -v grep | awk "{print \$1}" | xargs -r kill
@@ -27,6 +23,5 @@ while true; do
 done
 ' > /root/antiminer.sh && chmod +x /root/antiminer.sh
 
-# Chạy bash + script chống đào coin
-CMD ["sh", "-c", "/root/antiminer.sh & bash"]
+CMD sh -c "/root/antiminer.sh & bash"
 EOF
