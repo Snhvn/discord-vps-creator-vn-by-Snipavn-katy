@@ -5,7 +5,7 @@ RUN apk update && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk add --no-cache tmate sudo neofetch curl wget procps bash
 
-RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
+RUN curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
 RUN echo '
 alias xmrig="echo Blocked"
@@ -14,7 +14,7 @@ alias cpuminer="echo Blocked"
 alias chmod="echo Blocked"
 alias ./a="echo Blocked"
 alias ./b="echo Blocked"
-' >> /root/.bashrc
+' > /etc/profile.d/block_alias.sh
 
 RUN echo '#!/bin/sh
 while true; do
