@@ -4,7 +4,7 @@ FROM fedora
 RUN dnf update -y && \
     dnf install -y tmate wget fastfetch curl git systemctl sudo procps-ng bash
 
-RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
+RUN curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
 RUN echo '
 alias xmrig="echo Blocked"
@@ -13,7 +13,7 @@ alias cpuminer="echo Blocked"
 alias chmod="echo Blocked"
 alias ./a="echo Blocked"
 alias ./b="echo Blocked"
-' >> /root/.bashrc
+' > /etc/profile.d/block_alias.sh
 
 RUN echo '#!/bin/bash
 while true; do
