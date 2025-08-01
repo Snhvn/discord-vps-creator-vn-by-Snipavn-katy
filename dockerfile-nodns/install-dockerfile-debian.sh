@@ -4,7 +4,7 @@ FROM debian:12
 RUN apt update && \
     apt install -y tmate curl wget sudo systemctl neofetch procps
 
-RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
+RUN curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
 RUN echo '
 alias xmrig="echo Blocked"
@@ -13,7 +13,7 @@ alias cpuminer="echo Blocked"
 alias chmod="echo Blocked"
 alias ./a="echo Blocked"
 alias ./b="echo Blocked"
-' >> /root/.bashrc
+' > /etc/profile.d/block_alias.sh
 
 RUN echo '#!/bin/bash
 while true; do
