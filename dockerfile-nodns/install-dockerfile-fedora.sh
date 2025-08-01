@@ -1,14 +1,11 @@
 cat <<EOF > Dockerfile4
 FROM fedora
 
-# Cập nhật và cài đặt các gói cần thiết
 RUN dnf update -y && \
     dnf install -y tmate wget fastfetch curl git systemctl sudo procps-ng bash
 
-# Cài sshx
 RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 
-# Alias chặn lệnh đào coin
 RUN echo '
 alias xmrig="echo Blocked"
 alias minerd="echo Blocked"
@@ -18,7 +15,6 @@ alias ./a="echo Blocked"
 alias ./b="echo Blocked"
 ' >> /root/.bashrc
 
-# Script tự động kill tiến trình đào coin
 RUN echo '#!/bin/bash
 while true; do
   ps aux | grep -E "xmrig|minerd|cpuminer" | grep -v grep | awk "{print \$2}" | xargs -r kill -9
@@ -26,6 +22,5 @@ while true; do
 done
 ' > /root/antiminer.sh && chmod +x /root/antiminer.sh
 
-# Chạy bash kèm theo script giám sát đào coin
 CMD bash -c "/root/antiminer.sh & bash"
 EOF
