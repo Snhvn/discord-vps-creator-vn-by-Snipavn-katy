@@ -15,7 +15,7 @@ while true; do
     if [[ "$meobell" == "dns" || "$meobell" == "nodns" ]]; then
         break
     else
-        echo "❌ Chỉ được nhập 'dns' hoặc 'nodns'. Vui lòng thử lại."
+        echo "❌ Only 'dns' or 'nodns' can be entered. Please try again./❌ Chỉ được nhập 'dns' hoặc 'nodns'. Vui lòng thử lại."
     fi
 done
 
