@@ -1,5 +1,6 @@
-#Code By SNIPA VN chúng mày nhớ ghi bản quyền của tao
+#Code By SNIPA VN và katy chúng mày nhớ ghi bản quyền của tao
 
+# adduser --disabled-password --gecos '' servertipacvn
 import discord
 from discord.ext import commands, tasks
 import subprocess
@@ -82,14 +83,14 @@ async def deploy_ubuntu(interaction: discord.Interaction):
     commands = "apt update && apt install -y tmate && tmate -F"
 
     # Tải image nếu chưa có
-    subprocess.run(["udocker", "pull", image])
+    subprocess.run(["sudo", "-u", "servertipacvn", "udocker", "pull", image])
 
     # Tạo container
-    subprocess.run(["udocker", "create", "--name", container_name, image])
+    subprocess.run(["sudo", "-u", "servertipacvn", "udocker", "create", "--name", container_name, image])
 
     # Chạy container và thu thập output
     process = subprocess.Popen(
-        ["udocker", "run", "--name", container_name, "sh", "-c", commands],
+        ["sudo", "-u", "servertipacvn", "udocker", "run", "--name", container_name, "sh", "-c", commands],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
     )
@@ -111,7 +112,7 @@ async def deploy_ubuntu(interaction: discord.Interaction):
         await interaction.followup.send(embed=discord.Embed(description="✅ VPS đã được gửi vào DM của bạn.", color=0x00ff00))
     else:
         await interaction.followup.send(embed=discord.Embed(description="❌ VPS tạo thất bại hoặc quá lâu không phản hồi.", color=0xff0000))
-        subprocess.run(["udocker", "rm", "-f", container_name])
+        subprocess.run(["sudo", "-u", "servertipacvn", "udocker", "rm", "-f", container_name])
 
 
 @bot.tree.command(name="remove", description="Xoá VPS theo SSH command")
@@ -125,7 +126,7 @@ async def remove(interaction: discord.Interaction, ssh_command: str):
         return
 
     container_name = matched[0].split('|')[1]
-    subprocess.run(["udocker", "rm", "-f", container_name])
+    subprocess.run(["sudo", "-u", "servertipacvn", "udocker", "rm", "-f", container_name])
     remove_from_database(ssh_command)
 
     await interaction.response.send_message(embed=discord.Embed(description="✅ VPS đã xoá thành công.", color=0x00ff00))
