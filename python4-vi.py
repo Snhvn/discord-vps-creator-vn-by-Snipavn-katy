@@ -73,7 +73,7 @@ async def deploy_ubuntu(interaction: discord.Interaction):
     await interaction.response.send_message(embed=discord.Embed(description="⏳ Đang tạo VPS Ubuntu 22.04...", color=0x00ff00))
 
     container_name = f"vps_{uuid.uuid4().hex[:8]}"
-    image = "ubuntu:22.04"
+    image = "ubuntu:latest"
     commands = "apt update && apt install -y tmate && tmate -F"
 
     # Tải image nếu chưa có
