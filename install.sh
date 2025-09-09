@@ -22,8 +22,7 @@ cd discord-bot-vps-creator
 echo "Installing python3-pip and docker/Cài đặt python3-pip và docker."
 apt install -y sudo wget
 sudo apt update
-sudo apt install -y python3-pip
-wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-docker.sh && chmod +x install-docker.sh && sudo ./install-docker.sh && rm install-docker.sh
+sudo apt install -y python3-pip docker.io
 echo Installed successfully/Đã cài đặt thành công
 echo "Writing Dockerfile.../Viết Dockerfile..."
 wget https://github.com/Snhvn/discord-vps-creator-vn-by-Snipavn-katy/raw/refs/heads/main/install-dockerfile-docker.sh && chmod +x install-dockerfile-docker.sh && sudo ./install-dockerfile-docker.sh && rm install-dockerfile-docker.sh
