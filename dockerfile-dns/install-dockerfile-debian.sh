@@ -9,5 +9,5 @@ RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 RUN systemctl enable docker
 
 STOPSIGNAL SIGRTMIN+3
-
+CMD ["/sbin/init"]
 EOF
