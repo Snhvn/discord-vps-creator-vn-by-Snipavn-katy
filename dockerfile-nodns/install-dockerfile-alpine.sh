@@ -10,6 +10,6 @@ RUN cd && curl -sSf https://sshx.io/get | sh -s download && chmod +x /root/sshx
 RUN rc-update add docker default
 
 STOPSIGNAL SIGRTMIN+3
-
+CMD ["/sbin/init"]
 
 EOF
