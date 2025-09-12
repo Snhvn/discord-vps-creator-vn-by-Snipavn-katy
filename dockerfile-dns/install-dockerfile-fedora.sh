@@ -10,6 +10,6 @@ RUN cd && echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf &&
 RUN systemctl enable docker
 
 STOPSIGNAL SIGRTMIN+3
-
+CMD ["/sbin/init"]
 
 EOF
