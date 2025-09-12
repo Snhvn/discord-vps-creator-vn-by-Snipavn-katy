@@ -10,4 +10,5 @@ RUN systemctl enable docker
 
 STOPSIGNAL SIGRTMIN+3
 
+CMD ["/sbin/init"]
 EOF
