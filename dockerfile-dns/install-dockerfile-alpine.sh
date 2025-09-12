@@ -5,7 +5,7 @@ RUN echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf
 
 RUN apk update && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --no-cache tmate curl wget sudo systemctl neofetch procps dbus gnupg2 apt-transport-https ca-certificates software-properties-common net-tools dnsutils iputils-ping docker openrc
+    apk add --no-cache tmate curl wget neofetch openrc docker
     
 RUN rc-update add docker default
 
